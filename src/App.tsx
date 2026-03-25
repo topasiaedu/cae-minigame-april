@@ -1,4 +1,4 @@
-import React from 'react';
+
 import { useGameState } from './hooks/useGameState';
 import { LoginScreen } from './components/LoginScreen';
 import { QuestionScreen } from './components/QuestionScreen';

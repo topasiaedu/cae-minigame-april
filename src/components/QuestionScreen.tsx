@@ -55,7 +55,7 @@ export const QuestionScreen: React.FC<QuestionScreenProps> = ({
   const stageLabel = stage === 1 ? 'STAGE I · THE UNKNOWN' : stage === 2 ? 'STAGE II · THE AFTERMATH' : 'STAGE III · THE MIRROR';
   const transClass = isTransitioning ? 'screen-exit' : 'screen-enter';
   const options = question.options;
-  const letters = ['A', 'B', 'C', 'D'];
+
 
   // Swipe gesture: pointer events work on both touch and mouse
   const onPointerDown = (e: React.PointerEvent) => {
