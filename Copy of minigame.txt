@@ -1,0 +1,387 @@
+﻿MINIGAME
+1️⃣ 游戏目标（Goal）
+项目
+	内容
+	游戏定位
+	Webinar心理触发小游戏
+	核心作用
+	帮玩家意识到自己在人生关键节点存在重复的决策惯性
+	体验重点
+	不是得到答案，而是开始产生疑问
+	心理路径
+	Pattern Awareness → Life Reflection → Directional Doubt
+	最终效果
+	玩家觉得「好像看到一点问题，但还没完全想通」
+	后续承接
+	由 Speaker 在 Closing 继续解释
+	2️⃣ 玩家体验流程（Flow）
+阶段
+	玩家体验
+	系统设计
+	心理效果
+	Intro
+	回答普通情境问题
+	不提命盘、不提类型
+	降低防御
+	Question Flow
+	连续做选择题
+	现实决策情境
+	触发自我投射
+	Reflection Trigger 1
+	第5题后
+	简短提示
+	开始注意自己的选择
+	Reflection Trigger 2
+	第10题后
+	更深层问题
+	开始怀疑长期模式
+	Reflection Trigger 3
+	第15题后
+	收敛式提示
+（强化长期重复影响）
+	开始意识到决策方式
+可能塑造人生路径
+	Result Page
+	简短观察
+	不给完整答案
+	留给 speaker 继续解释
+	3️⃣ Question 结构
+阶段
+	题目范围
+	题目主题
+	心理目的
+	Stage 1
+	Q1–Q5
+	机会与行动
+	观察自己面对机会的反应
+	Stage 2
+	Q6–Q10
+	错失与判断
+	开始反思过去决策
+	Stage 3
+	Q11–Q15
+	人生方向
+	引导玩家意识到长期决策惯性可能影响人生方向
+	- 设计意图：Stage 3 不是测试决策风格，而是触发对人生路径惯性的自我觉察
+
+Q1
+公司准备启动一个新项目，但方向还不清楚。
+如果加入，可能更快被看见；如果失败，也可能承担责任。
+你会：
+A. 先加入，边做边看
+B. 再观察一段时间
+C. 先评估风险值不值得
+D. 除非有退路，否则不会太快决定
+________________
+
+
+Q2
+一个合作机会突然出现，但很多细节还没有明确。
+你知道如果现在不决定，这个机会很可能会很快被别人抓住，未来可能再也没有类似的机会。然而，决定是否参与时，许多风险和不确定性仍未解决。你通常会：
+A. 先把机会抓住，至少不让别人抢先
+B. 再多观察一下，等更清楚后再决定
+C. 先计算投入与回报，确认是否值得投入
+D. 不想太早被绑定，宁可错过这次机会
+________________
+
+
+Q3
+有时候，一个机会刚出现时并不成熟。
+你知道机会的成功并不确定，但它可能为你打开一个更广阔的未来。如果你不抓住这次机会，可能永远不会有第二次。面对这样的情境，你会做出怎样的决定：
+A. 愿意早点参与，尽量抢占先机
+B. 先观察，看这个机会能否发展
+C. 先分析可能性，确认风险是否值得承担
+D. 不太喜欢太早做决定，先保持弹性
+________________
+
+
+Q4
+你发现一个新的发展方向，但短期结果不确定。
+这个方向可能带来巨大的回报，但它也需要投入大量的时间和资源，而目前没有任何明显的回报。你会如何做出决策？：
+A. 先试试看，至少开始行动
+B. 再观察一段时间，等更多信息出现再做决定
+C. 先研究清楚，了解风险和回报后再决定
+D. 先保留空间，不轻易投入，等待更明确的答案
+________________
+
+
+Q5
+一个机会需要比较快决定。
+如果拖太久，可能会失去机会，而机会的价值在时间上可能会急剧缩水。你知道如果不马上做出决定，别人可能会抢先，而你会错失这个机会。在这种情况下，你会怎么做？：
+A. 宁可早点行动，抓住机会
+B. 希望多一点时间判断，再决定是否投入
+C. 先评估风险，确保值不值得再决定是否行动
+D. 不太喜欢被时间压力逼迫决定，可能会错过机会
+________________
+
+
+Trigger 1
+有些人面对机会时，会很自然地用同一种方式做决定。
+久而久之，这种习惯可能会重复出现在很多重要选择里。
+________________
+
+
+Q6
+你看到身边有人抓住了一个机会，而你当时没有行动。
+回头看，你会：
+A. 觉得当时应该早点试试
+B. 觉得多观察一点也是理性的
+C. 想分析为什么那个机会成功
+D. 觉得每个人的节奏不同，自己也没错
+________________
+
+
+Q7
+你遇到两个方向：
+一个比较安全，但成长有限；
+一个更有潜力，但不确定。
+安全的路径虽然能保证短期稳定，但你知道它不会带来巨大飞跃；而潜力大的路径，虽然存在许多不确定性，但如果成功，回报会远远超过现在。你通常会：
+A. 试试更有潜力的方向，抓住未来的机会
+B. 先走稳妥一点的路，保持现有的安全感
+C. 先评估长期回报，分析哪个更有意义
+D. 保留更多选择空间，不想太早做决定
+________________
+
+
+Q8
+一个机会需要投入不少时间，
+但短期可能看不到结果。在这种情况下，你会如何决策？：
+A. 愿意先投入看看，尝试做出改变
+B. 再观察一段时间，评估是否值得投入
+C. 先算清楚是否值回报，确保投入的时间值得
+D. 不太想太早投入，不确定是否能得到回报
+________________
+
+
+Q9
+事情还在变化，没有明确答案。
+这种时候你通常会：
+A. 先行动再调整，反应迅速
+B. 再观察一段时间，等情况明朗再做决定
+C. 多分析可能性，确保不会做错决策
+D. 先保持弹性，等待更多信息出现再决定
+________________
+
+
+Q10
+有些决定拖得太久，机会可能就会消失。
+面对这种情况，你会：
+A. 宁可早点行动，抓住机会
+B. 希望再确认一下，确保做对决定
+C. 再多想一想，仔细评估风险与回报
+D. 不太喜欢被时间压力影响，可能错过机会
+________________
+
+
+Trigger 2
+很多人后来回头看才发现，有些机会其实出现过。
+只是当时用了一个自己很熟悉的决定方式。
+
+________________
+
+
+Q11
+一件事最后有没有做起来，
+很多时候不是看你当下有没有想法，
+而是看你一遇到关键节点时，
+会不会又回到自己最熟悉的处理方式。
+如果是你，你觉得哪一种情况最常让原本该推进的事停下来？
+A. 先冲进去再说，但做到一半才发现前面想得不够完整
+B. 一直想再看清楚一点，结果启动的时间越拖越后
+C. 一直在算现在做到底划不划算，结果行动速度被拉慢
+D. 不想太早收掉其他可能，所以一直没有真正定下来往前走
+________________
+
+
+Q12
+有些做决定的方式之所以会一直重复，
+不是因为你特别喜欢它，
+而是它确实让你比较安心。
+如果要你选，你觉得自己最依赖哪一种“安心感”？
+A. 先进去才不会错过，边做边调总比站着不动好
+B. 再等等会比较稳，至少不会太早做错判断
+C. 先想清楚比较保险，不然很容易把时间和资源放错地方
+D. 不急着定死比较自在，这样后面还有调整空间
+________________
+
+
+Q13
+问题是，
+一种让你安心的方式，
+也常常会顺便带来另一种看不见的成本。
+如果回头看，你觉得自己的方式最容易让你付出哪一种代价？
+A. 事情虽然有开始，但后面常常要花不少力气重来或修正
+B. 很多事不是不能做，而是总在“再等等”里慢慢错过时间点
+C. 本来可以推进的方向，常常因为想太久而停在原地
+D. 手上一直保有很多可能，但真正做深的事情却不多
+________________
+
+
+Q14
+同一种决策习惯用久了，
+影响的往往不只是几次成败，
+而是别人已经往前走了一段，
+你还停在自己最熟悉的那个节奏里。
+如果是你，你最想提醒自己的会是哪一种情况？
+A. 不要每次都先冲，免得总是在后面补洞
+B. 不要每次都等，免得重要机会总是在等待里变小
+C. 不要每次都先算，免得连该试的事都还没开始
+D. 不要每次都留退路，免得一直没有真正压进关键方向
+________________
+
+
+Q15
+走到现在，
+真正值得在意的，
+可能已经不是某一次决定做得漂不漂亮，
+而是你一直以来最常用的那种方式，
+到底把你推近了什么，
+又让你离什么越来越远。
+如果要你现在认真问自己一个问题，你会选哪一个？
+A. 我是不是太常先行动，结果把很多本来能避免的修正留到后面？
+B. 我是不是太常等到更有把握，结果错过了本来可以更早进入的机会？
+C. 我是不是太常把重点放在值不值得，结果让很多事停在评估阶段？
+D. 我是不是太常想保留空间，结果一直没有真正投入最重要的选择？
+________________
+
+
+
+
+Trigger 3
+很多人走到某个阶段才发现，
+影响人生方向的，往往不是一次决定，
+而是一直重复的那种方式。
+
+
+________________
+Result Page Structure & Content Logic
+Purpose of the Result Page
+The Result Page is designed to help participants:
+* Recognise a familiar decision pattern
+* Reflect on how this pattern shows up in real situations
+* Develop a subtle awareness of its longer-term influence
+It is not intended to:
+* Provide a full psychological explanation
+* Label personality traits
+* Deliver a completed “assessment result”
+Instead, the page creates an open reflective state before the live session.
+________________
+
+
+Page 1 
+Header
+Participant Name
+A familiar way you tend to respond when things are still unfolding
+Purpose:
+Frame the experience as recognition, not evaluation.
+________________
+
+
+1. A closer look
+Pattern chips provide a quick behavioural impression of the participant’s decision tendency.
+They function as:
+* Emotional recognition cues
+* Not diagnostic labels
+* Not conceptual frameworks
+Final chip set:
+* Early movement
+* Adjust as you go
+* Open options
+* Before full clarity
+* Short cycles
+* Stay in motion
+Design intention:
+* One primary chip (visual anchor)
+* Two supporting chips
+* Three background chips
+* Slight asymmetry to suggest an emerging pattern
+________________
+
+
+2. How you tend to respond
+Slider signals visualise behavioural tendencies across different decision contexts.
+Purpose:
+* Show pattern through variation
+* Reduce reliance on abstract explanation
+* Enable intuitive self-recognition
+This section acts as:
+Evidence before interpretation
+________________
+
+
+3. What this pattern may mean
+This section introduces a gentle interpretation of the behavioural pattern.
+Tone requirements:
+* Exploratory, not conclusive
+* Reflective, not instructional
+* Observational, not evaluative
+Content goal:
+* Connect behaviour → underlying tendency
+* Introduce subtle tension (awareness gap)
+* Avoid final psychological closure
+This prepares participants for deeper reflection.
+________________
+
+
+Page 2 
+Looking at the bigger picture
+This section expands the perceived importance of repeated behavioural patterns.
+Purpose:
+* Shift from moment → trajectory
+* Introduce temporal depth
+* Create psychological pause
+Tone:
+* Quiet
+* Non-directive
+* Existential rather than analytical
+Design intention:
+* Increased whitespace
+* Slower reading rhythm
+* Reduced visual density
+This supports transition into the live facilitation experience.
+________________
+
+
+Experience Flow (Psychological Sequence)
+The intended internal journey is:
+1. Pattern glimpse (chips)
+2. Pattern confirmation (signals)
+3. Pattern interpretation (insight)
+4. Pattern significance (reflection)
+End state:
+Participants feel:
+* Recognised
+* Slightly unsettled
+* Curious to understand more
+Not:
+* Diagnosed
+* Concluded
+* Fully explained
+________________
+
+
+Tone Principles for the Result Page
+The page should feel:
+* Reflective, not analytical
+* Human, not technical
+* Suggestive, not definitive
+* Calm, not instructional
+It should avoid resembling:
+* Personality test reports
+* Coaching worksheets
+* Learning modules
+* Data dashboards
+Instead, it should resemble:
+A quiet moment of self-realisation.
+
+
+
+
+Result Reflection Text
+从刚才的选择来看，
+你在关键节点时，似乎会回到一种比较熟悉的处理方式。
+这种方式可能让事情更容易开始，
+也可能在不知不觉中影响你走向的方向。
+很多人后来才发现，
+不是某一次决定改变了人生，
+而是长期重复的那种方式。
