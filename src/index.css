@@ -116,6 +116,36 @@ p { line-height: 1.65; color: var(--color-text-light); }
   cursor: not-allowed;
 }
 
+/* ─── Accessibility ──────────────────────────────────────────────────────── */
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+button:focus-visible {
+  outline: 2px solid var(--color-gold-dark);
+  outline-offset: 2px;
+}
+
+.btn-primary:focus-visible {
+  outline: 2px solid var(--color-gold-dark);
+  outline-offset: 3px;
+}
+
+.back-btn:focus-visible {
+  outline: 2px solid var(--color-gold-dark);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
 /* ─── Screen Transitions ─────────────────────────────────────────────────── */
 
 @keyframes smoothEnter {
@@ -214,11 +244,20 @@ p { line-height: 1.65; color: var(--color-text-light); }
 /* ─── Breathe Animation ──────────────────────────────────────────────────── */
 
 @keyframes breathe {
-  0%   { opacity: 0.3; transform: scale(0.95); }
-  50%  { opacity: 1;   transform: scale(1.1);  }
-  100% { opacity: 0.3; transform: scale(0.95); }
+  0%   { opacity: 1;   transform: scale(1);    }
+  50%  { opacity: 1;   transform: scale(1.06); }
+  100% { opacity: 0.55; transform: scale(1);   }
 }
 .animate-breathe { animation: breathe 3.5s ease-in-out infinite; }
+
+/**
+ * Delayed breathe variant for elements whose parent fades in over ~2s.
+ * The 2.2s delay ensures the breathe cycle starts only after the
+ * parent animate-fade-up delay-1200 has fully resolved.
+ */
+.animate-breathe-delayed {
+  animation: breathe 3.5s ease-in-out 2.2s infinite;
+}
 
 /* ─── Ambient Orbs ───────────────────────────────────────────────────────── */
 
@@ -282,10 +321,151 @@ p { line-height: 1.65; color: var(--color-text-light); }
   font-size: 18rem;
   font-family: 'Times New Roman', serif;
   font-weight: 700;
-  opacity: 0.02;
+  opacity: 0.04;
   color: var(--color-text);
   z-index: 0;
   pointer-events: none;
   user-select: none;
   line-height: 1;
+}
+
+/* ─── Echo Line Expand ───────────────────────────────────────────────────── */
+
+@keyframes expandLine {
+  0%   { width: 0;    opacity: 0; }
+  30%  { opacity: 1; }
+  100% { width: 50px; opacity: 1; }
+}
+
+.echo-line-expand {
+  height: 1px;
+  background: var(--color-gold-dark);
+  margin: 1.2rem auto 0;
+  animation: expandLine 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) 0.2s forwards;
+  width: 0;
+}
+
+/* ─── Surprise Screen Progress Line ─────────────────────────────────────── */
+
+/**
+ * 4-second linear fill that spans the full width of the screen.
+ * Duration matches the SurpriseScreen auto-advance timer exactly.
+ * The line signals to the player that waiting is intentional, not a bug.
+ */
+@keyframes surpriseProgress {
+  0%   { width: 0%; }
+  100% { width: 100%; }
+}
+
+.surprise-progress {
+  position: absolute;
+  bottom: 2.5rem;
+  left: 0;
+  height: 1px;
+  width: 0%;
+  background: var(--color-gold-dark);
+  opacity: 0.45;
+  animation: surpriseProgress 4s linear forwards;
+  pointer-events: none;
+}
+
+/* ─── Result Page Entry Curtain ──────────────────────────────────────────── */
+
+/**
+ * A semi-dark overlay rendered on the result page that fades from visible
+ * to invisible over 1.8s. Creates a "theatre lights dropping" effect that
+ * gives the result reveal a moment of weight before the content appears.
+ * pointer-events: none throughout — it never blocks interaction.
+ */
+@keyframes curtainFade {
+  0%   { opacity: 1; }
+  22%  { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+.result-curtain {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(30, 20, 10, 0.62);
+  z-index: 50;
+  pointer-events: none;
+  animation: curtainFade 1.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+/* ─── Stage III Progress Bar ─────────────────────────────────────────────── */
+
+/**
+ * Overrides the gold gradient on the progress bar for Stage III questions.
+ * Amber/copper tones signal a heavier register without alarming the player.
+ */
+.stage3-progress-bar {
+  background: linear-gradient(90deg, rgba(200, 110, 40, 0.85), rgba(160, 70, 20, 1)) !important;
+}
+
+/* ─── Character-by-Character Reveal ─────────────────────────────────────── */
+
+/**
+ * Used on Reflection 2's header "A silent repetition."
+ * Each character span is given an increasing animation-delay inline.
+ * The result: the phrase assembles itself character by character,
+ * creating a felt sense that the pattern is being named slowly.
+ */
+@keyframes charReveal {
+  0%   { opacity: 0; transform: translateY(8px); }
+  100% { opacity: 1; transform: translateY(0);   }
+}
+
+.char-reveal-container {
+  display: inline;
+}
+
+.char-span {
+  display: inline-block;
+  opacity: 0;
+  animation: charReveal 0.35s ease forwards;
+}
+
+/* Preserve space characters in the reveal */
+.char-span-space {
+  display: inline-block;
+  width: 0.28em;
+}
+
+/* ─── Extended Stagger Delays ────────────────────────────────────────────── */
+
+.delay-1400 { animation-delay: 1.4s; }
+
+@keyframes gentlePulse {
+  0%   { transform: scale(1); }
+  50%  { transform: scale(1.018); }
+  100% { transform: scale(1); }
+}
+
+/** The hidden cost box uses animate-fade-up for its entrance. A separate
+ *  animation property here would override it (CSS animation is not additive).
+ *  Instead, chain both animations in a single comma-separated declaration:
+ *  first fadeUp with 0.4s delay (matching delay-400), then gentlePulse at 2s. */
+.hidden-cost-pulse {
+  opacity: 0;
+  animation:
+    fadeUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) 0.4s forwards,
+    gentlePulse 0.8s ease 2s 1 both;
+}
+
+@keyframes goldLineExtend {
+  0%   { width: 0;    opacity: 0; }
+  12%  { opacity: 1; }
+  100% { width: 60px; opacity: 1; }
+}
+
+.reflection-timer-line {
+  height: 1px;
+  background: var(--color-gold-mid);
+  margin: 2.5rem auto 0;
+  width: 0;
+  opacity: 0;
+  animation: goldLineExtend 3.5s ease-out forwards;
 }

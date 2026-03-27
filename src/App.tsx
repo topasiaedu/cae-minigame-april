@@ -1,21 +1,95 @@
+import { useEffect, useMemo } from "react";
 import { useGameState } from "./hooks/useGameState";
 import { LoginScreen }      from "./components/LoginScreen";
 import { QuestionScreen }   from "./components/QuestionScreen";
 import { ReflectionScreen } from "./components/ReflectionScreen";
+import { SurpriseScreen }   from "./components/SurpriseScreen";
+import { BreatheScreen }    from "./components/BreatheScreen";
 import { StageIntroScreen } from "./components/StageIntroScreen";
 import { ResultScreen }     from "./components/ResultScreen";
-import { questions }        from "./data/content";
+import { questions, Dimension } from "./data/content";
 
 function App() {
   const gameState = useGameState();
+
+  /**
+   * Scroll to top instantly on every screen transition.
+   * Prevents mobile players from seeing partial content from the previous screen.
+   */
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "instant" as ScrollBehavior });
+  }, [gameState.stage, gameState.questionIndex]);
+
+  /**
+   * Compute the current dominant behavioural dimension from answers collected
+   * so far. Used to drive subliminal ambient orb adjustments. Returns null if
+   * no answers have been submitted yet.
+   */
+  const currentDominant: Dimension | null = useMemo(() => {
+    if (gameState.answers.length === 0) return null;
+    return gameState.computeDominantDimension(0, gameState.answers.length);
+  }, [gameState.answers]);
+
+  /**
+   * Subliminal orb adjustments based on the player's emerging behavioural pattern.
+   * Changes are deliberately subtle — the player should feel the room is slightly
+   * different without being able to name why.
+   *
+   * A (action): warmer, faster — the room feels energised
+   * B (waiting): cooler, slower — the room feels still
+   * C (calculating): sharper edges (less blur) — the room feels precise
+   * D (preserving): orbs drift apart — the room feels spacious
+   */
+  const orbOverrides = useMemo(() => {
+    if (currentDominant === null) {
+      return { orb1: {} as React.CSSProperties, orb2: {} as React.CSSProperties };
+    }
+
+    switch (currentDominant) {
+      case "A":
+        return {
+          orb1: { animationDuration: "18s", background: "radial-gradient(circle, rgba(255, 190, 100, 0.22) 0%, rgba(200, 150, 80, 0) 70%)" } as React.CSSProperties,
+          orb2: { animationDuration: "22s", background: "radial-gradient(circle, rgba(245, 195, 110, 0.2) 0%, rgba(200, 150, 80, 0) 70%)" } as React.CSSProperties
+        };
+      case "B":
+        return {
+          orb1: { animationDuration: "35s", background: "radial-gradient(circle, rgba(220, 200, 160, 0.15) 0%, rgba(180, 160, 120, 0) 70%)" } as React.CSSProperties,
+          orb2: { animationDuration: "40s", background: "radial-gradient(circle, rgba(210, 190, 150, 0.12) 0%, rgba(180, 160, 120, 0) 70%)" } as React.CSSProperties
+        };
+      case "C":
+        return {
+          orb1: { animationDuration: "25s", filter: "blur(25px)" } as React.CSSProperties,
+          orb2: { animationDuration: "30s", filter: "blur(30px)" } as React.CSSProperties
+        };
+      case "D":
+        return {
+          orb1: { top: "-15%", left: "-15%", animationDuration: "28s" } as React.CSSProperties,
+          orb2: { bottom: "-25%", right: "-25%", animationDuration: "33s" } as React.CSSProperties
+        };
+    }
+  }, [currentDominant]);
+
+  // Reflection-specific slice and counts are only meaningful during reflection stage.
+  const reflectionSlice: Dimension[] =
+    gameState.stage === "reflection"
+      ? gameState.answers.slice(gameState.questionIndex - 3, gameState.questionIndex)
+      : [];
+  const reflectionDominant: Dimension =
+    gameState.stage === "reflection"
+      ? gameState.computeDominantDimension(gameState.questionIndex - 3, gameState.questionIndex)
+      : "A";
+  const reflectionDominantCount = reflectionSlice.filter(
+    (answer) => answer === reflectionDominant
+  ).length;
 
   return (
     <div style={{ position: "relative", overflow: "hidden", minHeight: "100vh", width: "100%" }}>
       {/* Ambient depth elements — two large blurred radial gradient orbs that
           float very slowly behind the glass container, giving the frosted-glass
-          effect something visible to blur against. */}
-      <div className="ambient-orb-1" />
-      <div className="ambient-orb-2" />
+          effect something visible to blur against. Inline styles here override
+          specific CSS class properties based on the player's emerging pattern. */}
+      <div className="ambient-orb-1" style={orbOverrides.orb1} />
+      <div className="ambient-orb-2" style={orbOverrides.orb2} />
 
       <main style={{
         position: "relative",
@@ -33,7 +107,7 @@ function App() {
           />
         )}
 
-        {/* ── Question (Q1–Q15) ── */}
+        {/* ── Question (Q1–Q10) ── */}
         {gameState.stage === "question" && gameState.currentQuestion && (
           <QuestionScreen
             question={gameState.currentQuestion}
@@ -47,14 +121,12 @@ function App() {
           />
         )}
 
-        {/* ── Reflection (after Q5, Q10, Q15) ── */}
+        {/* ── Reflection (after Q3 and Q6) ── */}
         {gameState.stage === "reflection" && (
           <ReflectionScreen
             triggerBlock={gameState.currentTriggerBlock}
-            dominantDimension={gameState.computeDominantDimension(
-              gameState.questionIndex - 5,
-              gameState.questionIndex
-            )}
+            dominantDimension={reflectionDominant}
+            dominantCount={reflectionDominantCount}
             onProceed={gameState.proceedFromReflection}
             isTransitioning={gameState.isTransitioning}
             onBack={gameState.goBack}
@@ -62,7 +134,23 @@ function App() {
           />
         )}
 
-        {/* ── Stage III intro (shown once, between Reflection 2 and Q11) ── */}
+        {/* ── Surprise Screen (shown once, between Reflection 2 and Stage III Intro) ── */}
+        {gameState.stage === "surprise" && (
+          <SurpriseScreen
+            onProceed={gameState.proceedFromSurprise}
+            isTransitioning={gameState.isTransitioning}
+          />
+        )}
+
+        {/* Breathe Screen (shown once, between Surprise and Stage III Intro) */}
+        {gameState.stage === "breathe" && (
+          <BreatheScreen
+            onProceed={gameState.proceedFromBreathe}
+            isTransitioning={gameState.isTransitioning}
+          />
+        )}
+
+        {/* ── Stage III intro (shown once, before Q7) ── */}
         {gameState.stage === "stageIntro" && (
           <StageIntroScreen
             onProceed={gameState.proceedFromStageIntro}
@@ -76,6 +164,10 @@ function App() {
           <ResultScreen
             name={gameState.user.name}
             finalDimension={gameState.finalDominantDimension}
+            isTied={gameState.finalResultIsTied}
+            q10AnswerText={gameState.q10AnswerText}
+            q1AnswerText={gameState.q1AnswerText}
+            q7AnswerText={gameState.q7AnswerText}
             isTransitioning={gameState.isTransitioning}
             onBack={gameState.goBack}
           />

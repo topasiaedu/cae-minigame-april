@@ -10,6 +10,9 @@ export interface Question {
   setup: string;
   context: string;
   options: Option[];
+  /** When true, this question asks the player to pick the option LEAST like them.
+   * Reversal answers are excluded from dominant dimension scoring. */
+  isReversal?: boolean;
 }
 
 export interface Trigger {
@@ -19,7 +22,7 @@ export interface Trigger {
 }
 
 export const questions: Question[] = [
-  // ─── Stage I (Q1–Q5): The Unknown ────────────────────────────────────────
+  // ─── Stage I (Q1–Q3): The Unknown ────────────────────────────────────────
   // Theme: How do you react to opportunities before you have full information?
   {
     id: 1,
@@ -44,44 +47,23 @@ export const questions: Question[] = [
     ]
   },
   {
+    // Reversal question: player picks the reaction most unlike them
     id: 3,
-    setup: "An exciting idea appears, but it feels very unproven.",
-    context: "It could be huge, but maybe not. Without acting now, there won't be a second chance. You decide to:",
+    isReversal: true,
+    setup: "An opportunity appears. The details are unclear. You have to decide now.",
+    context: "Which of these reactions would you almost never have?",
     options: [
-      { id: "A", text: "Jump in early to get a head start" },
-      { id: "B", text: "Wait and see if it turns into something real" },
-      { id: "C", text: "Look at the data to make sure it's smart" },
-      { id: "D", text: "Keep my options open and don't commit yet" }
-    ]
-  },
-  {
-    id: 4,
-    setup: "You see a new path for growth, but you don't know what the short-term results will be.",
-    context: "It takes a lot of time with no obvious reward. How do you make the call?",
-    options: [
-      { id: "A", text: "Just start trying and see what happens" },
-      { id: "B", text: "Watch quietly to gather more facts" },
-      { id: "C", text: "Study the risk and reward before moving" },
-      { id: "D", text: "Stay back and wait for obvious answers" }
-    ]
-  },
-  {
-    id: 5,
-    setup: "A rare opportunity demands a fast choice.",
-    context: "If you hesitate, the value drops or someone else takes it. Under time pressure, you:",
-    options: [
-      { id: "A", text: "Act fast to make sure I don't lose it" },
-      { id: "B", text: "Try to buy more time to make a safe choice" },
-      { id: "C", text: "Quickly scan the numbers to make sure it's safe" },
-      { id: "D", text: "Step away. I don't like being rushed" }
+      { id: "A", text: "Jump straight in before thinking it through" },
+      { id: "B", text: "Hold back and wait for more information" },
+      { id: "C", text: "Run the numbers before making any move" },
+      { id: "D", text: "Avoid committing until a safer option appears" }
     ]
   },
 
-  // ─── Stage II (Q6–Q10): The Aftermath ────────────────────────────────────
+  // ─── Stage II (Q4–Q6): The Aftermath ─────────────────────────────────────
   // Theme: How do you reflect on past decisions and the chances you passed on?
-  // These are deliberately retrospective — the player looks backward, not forward.
   {
-    id: 6,
+    id: 4,
     setup: "You watch someone else succeed with a chance you decided to pass on.",
     context: "Looking back, you:",
     options: [
@@ -92,7 +74,7 @@ export const questions: Question[] = [
     ]
   },
   {
-    id: 7,
+    id: 5,
     setup: "You remember a path you did not take.",
     context: "Someone else took it. It worked out for them. When you replay that moment, you:",
     options: [
@@ -103,44 +85,23 @@ export const questions: Question[] = [
     ]
   },
   {
-    id: 8,
-    setup: "You stayed with a decision longer than you should have.",
-    context: "If you are honest about why you didn't leave sooner, it was because:",
+    // Reversal question: player picks the perspective they would almost never take
+    id: 6,
+    isReversal: true,
+    setup: "Looking back at past decisions you've made,",
+    context: "which of these perspectives would you almost never take?",
     options: [
-      { id: "A", text: "I was too committed to stop — leaving felt like wasting what I'd already done" },
-      { id: "B", text: "I needed more time to be completely sure it was the wrong move" },
-      { id: "C", text: "I kept recalculating whether the cost of leaving was actually worth it" },
-      { id: "D", text: "I wasn't ready to close that door — it might still have had value" }
-    ]
-  },
-  {
-    id: 9,
-    setup: "A major choice you made did not go the way you expected.",
-    context: "Looking back at it now, your most honest thought is:",
-    options: [
-      { id: "A", text: "I moved too fast and missed things I should have caught first" },
-      { id: "B", text: "I waited too long for certainty that was never coming" },
-      { id: "C", text: "I spent so long assessing that I ran out of time to act" },
-      { id: "D", text: "I kept too many exits open and never fully trusted the direction" }
-    ]
-  },
-  {
-    id: 10,
-    setup: "When you look back at chances you didn't take,",
-    context: "the most honest reason you passed on them was usually:",
-    options: [
-      { id: "A", text: "I assumed another chance would come — and moved on too quickly" },
-      { id: "B", text: "I wasn't certain enough yet. The window closed while I was waiting." },
-      { id: "C", text: "I was still weighing the risk and reward when the moment passed" },
-      { id: "D", text: "Some part of me didn't want to fully commit, even when the chance was real" }
+      { id: "A", text: "I should have acted sooner — waiting cost me" },
+      { id: "B", text: "I was right to pause — rushing would have made it worse" },
+      { id: "C", text: "I needed more data before I could have known" },
+      { id: "D", text: "Keeping my options open was the wisest thing I did" }
     ]
   },
 
-  // ─── Stage III (Q11–Q15): The Mirror ─────────────────────────────────────
+  // ─── Stage III (Q7–Q10): The Mirror ──────────────────────────────────────
   // Theme: Direct confrontation with your own habitual patterns.
-  // These questions don't ask what you would do — they ask what you already know.
   {
-    id: 11,
+    id: 7,
     setup: "Whether you succeed or fail,",
     context: "often doesn't depend on your initial idea. It depends on your hidden habits when things get hard. What most often stops you?",
     options: [
@@ -151,7 +112,7 @@ export const questions: Question[] = [
     ]
   },
   {
-    id: 12,
+    id: 8,
     setup: "Some habits keep repeating",
     context: "not because they are smart, but because they feel safe. If you had to be honest, what makes you feel safe?",
     options: [
@@ -162,29 +123,20 @@ export const questions: Question[] = [
     ]
   },
   {
-    id: 13,
-    setup: "The problem is,",
-    context: "a comfortable habit often carries an invisible price. Looking deeply at your past, what price do you usually pay?",
+    // Reversal question: player picks the hidden cost least like them
+    id: 9,
+    isReversal: true,
+    setup: "Every habit has a hidden price.",
+    context: "Which of these costs do you notice least in yourself?",
     options: [
-      { id: "A", text: "I start fast, but spend massive energy fixing things later" },
-      { id: "B", text: "I can do the work, but my 'wait a bit longer' misses the perfect window" },
-      { id: "C", text: "Great ideas die at the starting line because I spent too much time assessing them" },
-      { id: "D", text: "I hold onto many options, but struggle to build anything truly deep" }
+      { id: "A", text: "Moving fast and spending energy fixing things later" },
+      { id: "B", text: "Waiting too long until the best moment quietly passes" },
+      { id: "C", text: "Over-planning until great ideas never get started" },
+      { id: "D", text: "Keeping options open until nothing is ever truly built" }
     ]
   },
   {
-    id: 14,
-    setup: "When you use the same habit for years,",
-    context: "others move far ahead while you stay locked in your familiar rhythm. What do you most need to remind yourself of today?",
-    options: [
-      { id: "A", text: "Don't always rush in, so you can stop patching holes later" },
-      { id: "B", text: "Don't always wait, because great chances shrink while you sit still" },
-      { id: "C", text: "Don't always calculate, because you kill things before they even start" },
-      { id: "D", text: "Don't always leave an exit, because you never fully trust the path you are on" }
-    ]
-  },
-  {
-    id: 15,
+    id: 10,
     setup: "Getting to where you are today,",
     context: "the biggest factor wasn't one brilliant choice. It was the quiet habit that softly pushed you closer to some things — and further from others. What question must you ask yourself right now?",
     options: [
@@ -197,7 +149,7 @@ export const questions: Question[] = [
 ];
 
 // ─── Dynamic Reflection Triggers ─────────────────────────────────────────────
-// 12 unique texts (3 stages × 4 dimensions). Each is written in second-person
+// 8 unique texts (2 stages × 4 dimensions). Each is written in second-person
 // mirror style: name the pattern → describe it over time → end with a question.
 
 export const dynamicTriggers: Record<string, Record<Dimension, string>> = {
@@ -208,16 +160,10 @@ export const dynamicTriggers: Record<string, Record<Dimension, string>> = {
     D: "Some people naturally prefer to keep their escape doors open. Over time, does this quiet resistance to hard commitments dictate more of life than realized?"
   },
   stage2: {
-    A: "Many realize later that their familiar way of deciding — like leaping before looking — wasn't just a style. It was a hidden habit.",
-    B: "Many realize later that their familiar way of deciding — like constantly waiting for a better view — wasn't just cautious. It was a hidden habit.",
-    C: "Many realize later that their familiar way of deciding — like endlessly trusting the math — wasn't just rational. It was a hidden habit.",
-    D: "Many realize later that their familiar way of deciding — like keeping an exit nearby at all times — wasn't just flexible. It was a hidden habit."
-  },
-  stage3: {
-    A: "A pattern has quietly been drawing your map. Your speed has given you movement, but what has it kept you from building solidly?",
-    B: "A pattern has quietly been drawing your map. Your patience has kept you safe, but what great beginnings has it delayed?",
-    C: "A pattern has quietly been drawing your map. Your sharp thinking manages risk, but what beautiful things has it shut down fast?",
-    D: "A pattern has quietly been drawing your map. Your freedom keeps you safe from being trapped, but what profound depth has it kept away?"
+    A: "Moving quickly feels like taking charge. Over time, this constant motion simply becomes what you do. Does responding fast actually serve you, or has it just become your automatic rhythm?",
+    B: "Waiting for the dust to settle feels like the smart move. Over time, that pause quietly becomes your default gear. Are you holding back to see clearly, or has waiting simply become your habit?",
+    C: "Running the numbers first feels like the safest route. Over time, the need to measure everything slows your pace. Are you calculating the odds to win, or just to avoid making a mistake?",
+    D: "Leaving an open door feels like protecting your freedom. Over time, avoiding commitment becomes its own kind of cage. Are you keeping your options open to stay flexible, or simply to avoid being tied down?"
   }
 };
 
@@ -254,7 +200,7 @@ export const resultInterpretations: Record<Dimension, {
   },
   B: {
     chip: "Seeking clarity",
-    secondaryChips: ["Wait and see", "Gathering data", "Risk averse", "Steady pace"],
+    secondaryChips: ["Wait and see", "Gathering data", "Holds for more signal", "Steady pace"],
     sliders: [
       { label1: "Move first",        label2: "Think first",      title: "When a chance appears",           value: 80 },
       { label1: "Trust the feeling", label2: "Wait for proof",   title: "When information is incomplete",  value: 85 },
@@ -270,7 +216,7 @@ export const resultInterpretations: Record<Dimension, {
   },
   C: {
     chip: "Calculated risk",
-    secondaryChips: ["Numbers first", "Analytical", "Minimizing waste", "Firm logic"],
+    secondaryChips: ["Numbers first", "Maps the risk first", "Minimizing waste", "Firm logic"],
     sliders: [
       { label1: "Move first",        label2: "Think first",      title: "When a chance appears",           value: 72 },
       { label1: "Trust the feeling", label2: "Wait for proof",   title: "When information is incomplete",  value: 88 },

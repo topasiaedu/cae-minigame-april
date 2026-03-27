@@ -50,7 +50,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin, isTransitioni
             Over the next few minutes, we will revisit these choices.
           </p>
           <p style={{ fontStyle: "italic", opacity: 0.8 }}>
-            There are no right answers — only your natural habits. Let's look in the mirror.
+            The mirror will only reflect what is already there.
           </p>
         </div>
 
@@ -60,11 +60,14 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin, isTransitioni
           style={{ width: "100%", maxWidth: "360px", margin: "0 auto", opacity: 0 }}
         >
           <div className="input-group">
+            <label htmlFor="login-name" className="sr-only">Your name</label>
             <User className="input-icon" size={20} />
             <input
+              id="login-name"
               type="text"
               className="input-field"
               placeholder="Your name"
+              aria-label="Your name"
               value={name}
               onChange={(e) => setName(e.target.value)}
               required
@@ -74,14 +77,27 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin, isTransitioni
           {/* "Email" not "Gmail" — the audience includes Outlook, Yahoo, and
               corporate domain users. Branding this as "Gmail" silently excludes them. */}
           <div className="input-group">
+            <label htmlFor="login-email" className="sr-only">Email address (optional)</label>
             <Mail className="input-icon" size={20} />
             <input
+              id="login-email"
               type="email"
               className="input-field"
               placeholder="Email (Optional)"
+              aria-label="Email address (optional)"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
+          </div>
+          <div style={{
+            fontSize: "0.8rem",
+            color: "var(--color-text-light)",
+            opacity: 0.7,
+            textAlign: "center",
+            marginTop: "-0.5rem",
+            marginBottom: "1.2rem"
+          }}>
+            So Cae can follow up with you after the session.
           </div>
 
           {/* "Begin" is an invitation. "Next" is a form label. */}
@@ -92,18 +108,6 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin, isTransitioni
 
       </div>
 
-      <div
-        style={{
-          textAlign: "center",
-          marginTop: "auto",
-          paddingTop: "2rem",
-          opacity: 0.35,
-          fontSize: "0.8rem",
-          letterSpacing: "2px"
-        }}
-      >
-        CAE GOH
-      </div>
     </div>
   );
 };

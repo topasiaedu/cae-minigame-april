@@ -5,6 +5,13 @@ import { ChevronLeft } from "lucide-react";
 interface ResultScreenProps {
   name: string;
   finalDimension: Dimension;
+  isTied: boolean;
+  /** The verbatim text of the player's Q10 answer — quoted back in Phase 2 */
+  q10AnswerText: string;
+  /** The verbatim text of the player's Q1 answer — the "At the start" comparison anchor */
+  q1AnswerText: string;
+  /** The verbatim text of the player's Q7 answer — the "Just now" mirror comparison */
+  q7AnswerText: string;
   isTransitioning: boolean;
   onBack: () => void;
 }
@@ -12,53 +19,51 @@ interface ResultScreenProps {
 export const ResultScreen: React.FC<ResultScreenProps> = ({
   name,
   finalDimension,
+  isTied,
+  q10AnswerText,
+  q1AnswerText,
+  q7AnswerText,
   isTransitioning,
   onBack
 }) => {
   const resultData = resultInterpretations[finalDimension];
 
-  // Controls slider animation and word-by-word quote reveal.
-  // Starts false, becomes true 400ms after mount so animations fire after the
-  // screen-enter fade completes.
-  const [mounted, setMounted] = useState(false);
+  // Phase 1–4 staged reveal — each phase focuses attention on one set of content
+  const [phase, setPhase] = useState(1);
+  // Controls the continue button — appears 3 seconds after each phase loads
+  const [showContinue, setShowContinue] = useState(false);
 
+  /**
+   * Show the continue button after a phase-appropriate delay.
+   * Phase 1 (name only): 2s — minimal content, just a moment of address.
+   * Phase 2 (mirror + quotes): 2.5s — more to read, slightly longer.
+   * Phase 3 (benefit + hidden cost): 2s — the pulse animation draws attention.
+   * Phase 4 has no continue button — it is the final resting state.
+   */
   useEffect(() => {
-    if (!isTransitioning) {
-      const timer = setTimeout(() => setMounted(true), 400);
+    if (phase < 4 && !isTransitioning) {
+      setShowContinue(false);
+      const delayByPhase: Record<number, number> = { 1: 2000, 2: 2500, 3: 2000 };
+      const delay = delayByPhase[phase] ?? 2000;
+      const timer = setTimeout(() => setShowContinue(true), delay);
       return () => clearTimeout(timer);
     }
     return undefined;
-  }, [isTransitioning]);
+  }, [phase, isTransitioning]);
 
-  const transClass = isTransitioning ? "screen-exit" : "screen-enter";
+  /** Advance to the next result phase */
+  const advancePhase = (): void => {
+    setPhase(prev => Math.min(prev + 1, 4));
+  };
 
-  /**
-   * Editorial section divider — the "─────── 01 LABEL ───────" pattern.
-   * Gives the result page the feel of a magazine spread rather than a quiz output.
-   */
-  const SectionDivider = ({ number, label }: { number: string; label: string }) => (
-    <div style={{ display: "flex", alignItems: "center", gap: "1rem", marginBottom: "2.5rem" }}>
-      <div style={{
-        flex: 1,
-        height: "1px",
-        background: "linear-gradient(to right, var(--color-gold-mid), transparent)"
-      }} />
-      <span style={{
-        fontSize: "0.8rem",
-        letterSpacing: "3px",
-        color: "var(--color-gold-dark)",
-        fontWeight: 600,
-        whiteSpace: "nowrap"
-      }}>
-        {number} &nbsp; {label.toUpperCase()}
-      </span>
-      <div style={{
-        flex: 1,
-        height: "1px",
-        background: "linear-gradient(to left, var(--color-gold-mid), transparent)"
-      }} />
-    </div>
-  );
+  /** Go back one phase, or exit result if on phase 1 */
+  const handleBack = (): void => {
+    if (phase > 1) {
+      setPhase(prev => prev - 1);
+    } else {
+      onBack();
+    }
+  };
 
   /**
    * Word-by-word reveal for the final punchline sentence.
@@ -68,6 +73,7 @@ export const ResultScreen: React.FC<ResultScreenProps> = ({
    */
   const RevealWords = ({ text, startDelay = 0 }: { text: string; startDelay?: number }) => {
     const words = text.split(" ");
+    // showDetail is used here as the "mounted" trigger — sliders only animate when revealed
     return (
       <>
         {words.map((word, i) => (
@@ -75,8 +81,8 @@ export const ResultScreen: React.FC<ResultScreenProps> = ({
             key={i}
             style={{
               display: "inline-block",
-              opacity: mounted ? 1 : 0,
-              transform: mounted ? "translateY(0)" : "translateY(6px)",
+              opacity: phase === 4 ? 1 : 0,
+              transform: phase === 4 ? "translateY(0)" : "translateY(6px)",
               transition: [
                 `opacity 0.55s ease ${startDelay + i * 0.07}s`,
                 `transform 0.55s ease ${startDelay + i * 0.07}s`
@@ -91,242 +97,212 @@ export const ResultScreen: React.FC<ResultScreenProps> = ({
     );
   };
 
-  return (
-    <div className={`glass-container ${transClass}`} style={{ paddingBottom: "6rem" }}>
+  const transClass = isTransitioning ? "screen-exit" : "screen-enter";
 
-      {/* Back button */}
+  return (
+    <div className={`glass-container ${transClass}`} style={{ paddingBottom: "4rem" }}>
+
+      {/**
+       * Entry curtain — a semi-dark overlay that briefly covers the screen
+       * before fading away over 1.8s. Gives the result reveal a theatrical
+       * weight. pointer-events: none ensures it never blocks interaction.
+       */}
+      <div className="result-curtain" />
+
+      {/* Back button — always visible */}
       <div className="animate-fade-up" style={{ display: "flex", alignItems: "center", marginBottom: "2rem" }}>
         <button
-          onClick={onBack}
-          style={{
-            background: "none",
-            border: "none",
-            cursor: "pointer",
-            padding: "0.5rem",
-            marginLeft: "-0.5rem"
-          }}
+          onClick={handleBack}
+          style={{ background: "none", border: "none", cursor: "pointer", padding: "0.5rem", marginLeft: "-0.5rem" }}
           aria-label="Go back"
         >
           <ChevronLeft size={24} color="var(--color-text)" />
         </button>
       </div>
 
-      {/* ── Section 0: Identity header ── */}
-      <header
-        className="animate-fade-up delay-200"
-        style={{ marginBottom: "4rem", textAlign: "center" }}
-      >
-        <h1 style={{ fontSize: "2.8rem", marginBottom: "0.8rem", fontWeight: 400 }}>
-          {name || "Friend"}
-        </h1>
-        <p style={{ fontSize: "1.1rem", color: "var(--color-text-light)", lineHeight: 1.6 }}>
-          A familiar way you tend to respond<br />
-          when things are still unfolding
-        </p>
-      </header>
-
-      {/* ── Section 01: A closer look (Chips — 2-col gold grid) ── */}
-      <section className="animate-fade-up delay-400" style={{ marginBottom: "4rem" }}>
-        <SectionDivider number="01" label="A closer look" />
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.8rem" }}>
-          {[resultData.chip, ...resultData.secondaryChips].map((chip, idx) => (
-            <div
-              key={idx}
-              style={{
-                padding: "0.8rem 1rem",
-                background: "linear-gradient(135deg, var(--color-gold-light), var(--color-gold-mid))",
-                borderRadius: "14px",
-                fontWeight: idx === 0 ? 600 : 500,
-                fontSize: "1rem",
-                textAlign: "center",
-                color: "var(--color-text)",
-                boxShadow: "0 4px 12px rgba(220, 180, 110, 0.2)"
-              }}
+      {/* ═══════════════════════════════════════════════════════════════════
+          PHASE 1 — Player's name, alone.
+          A quiet moment of address before any interpretation begins.
+          ═══════════════════════════════════════════════════════════════════ */}
+      {phase === 1 && (
+        <div style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", textAlign: "center" }}>
+          <h1
+            className="animate-fade-up delay-200"
+            style={{ fontSize: "3.2rem", fontWeight: 400, marginBottom: "1rem" }}
+          >
+            {name || "Friend"}
+          </h1>
+          <p
+            className="animate-fade-up delay-400"
+            style={{ fontSize: "1.1rem", color: "var(--color-text-light)", lineHeight: 1.6 }}
+          >
+            A familiar way you tend to respond<br />when things are still unfolding
+          </p>
+          {isTied && (
+            <p
+              className="animate-fade-up delay-600"
+              style={{ fontSize: "0.95rem", color: "var(--color-text-light)", fontStyle: "italic", marginTop: "0.5rem" }}
             >
-              {chip}
+              Your pattern was closely divided between two tendencies.
+            </p>
+          )}
+
+          {showContinue && (
+            <div className="animate-fade-up" style={{ marginTop: "auto", paddingTop: "3rem", width: "100%", maxWidth: "360px" }}>
+              <button className="btn-primary" onClick={advancePhase}>Continue</button>
             </div>
-          ))}
+          )}
         </div>
-      </section>
+      )}
 
-      {/* ── Section 02: Behavioural sliders ── */}
-      <section className="animate-fade-up delay-600" style={{ marginBottom: "4rem" }}>
-        <SectionDivider number="02" label="How you tend to respond" />
-        <div style={{ display: "flex", flexDirection: "column", gap: "3rem" }}>
-          {resultData.sliders.map((slider, idx) => (
-            <div key={idx}>
-              {/* Context label above the slider track */}
-              <div style={{
-                fontSize: "0.85rem",
-                letterSpacing: "1.5px",
-                color: "var(--color-text-light)",
-                textTransform: "uppercase",
-                marginBottom: "1rem",
-                textAlign: "center"
-              }}>
-                {slider.title}
-              </div>
+      {/* ═══════════════════════════════════════════════════════════════════
+          PHASE 2 — Mirror sentence + Q1 vs Q7 comparison + Q10 quote-back.
+          The player's own words become the mirror — no interpretation needed.
+          ═══════════════════════════════════════════════════════════════════ */}
+      {phase === 2 && (
+        <div style={{ flex: 1, display: "flex", flexDirection: "column" }}>
+          {/* Mirror sentence — the first reflectionLine, NOT the dimension name */}
+          <p
+            className="animate-fade-up delay-200"
+            style={{ fontSize: "1.35rem", lineHeight: 1.8, color: "var(--color-text)", textAlign: "center", marginBottom: "3rem" }}
+          >
+            {resultData.reflectionLines[0]}
+          </p>
 
-              <div style={{ position: "relative", paddingBottom: "1.5rem" }}>
-                {/* Track */}
-                <div style={{
-                  width: "100%",
-                  height: "2px",
-                  background: "rgba(0,0,0,0.08)",
-                  borderRadius: "1px",
-                  position: "relative"
-                }}>
-                  {/* Centre reference tick */}
-                  <div style={{
-                    position: "absolute",
-                    left: "50%",
-                    top: "-4px",
-                    width: "1px",
-                    height: "10px",
-                    background: "rgba(0,0,0,0.15)",
-                    transform: "translateX(-50%)"
-                  }} />
-
-                  {/* Value dot — starts at centre (50%), animates to actual value on mount */}
-                  <div style={{
-                    position: "absolute",
-                    width: "20px",
-                    height: "20px",
-                    background: "#fff",
-                    border: "2.5px solid var(--color-gold-dark)",
-                    borderRadius: "50%",
-                    top: "-9px",
-                    left: mounted ? `${slider.value}%` : "50%",
-                    transform: "translateX(-50%)",
-                    transition: `left 1.8s cubic-bezier(0.2, 0.8, 0.2, 1) ${0.3 + idx * 0.2}s`,
-                    boxShadow: "0 2px 10px rgba(200, 150, 80, 0.35)",
-                    zIndex: 2
-                  }} />
+          {/* Q1 vs Q7 comparison — the player's own words as a mirror */}
+          {q1AnswerText.trim().length > 0 && q7AnswerText.trim().length > 0 && (
+            <div className="animate-fade-up delay-400" style={{ marginBottom: "3rem" }}>
+              <div style={{ marginBottom: "1.5rem" }}>
+                <p style={{ fontSize: "0.9rem", color: "var(--color-text-light)", fontStyle: "italic", marginBottom: "0.5rem" }}>
+                  At the start, you said:
+                </p>
+                <div style={{ borderLeft: "3px solid var(--color-gold-mid)", paddingLeft: "1.2rem" }}>
+                  <p style={{ fontSize: "1.05rem", color: "var(--color-text)", fontWeight: 500, lineHeight: 1.65, margin: 0 }}>
+                    {q1AnswerText}
+                  </p>
                 </div>
-
-                {/* Labels below the track */}
-                <div style={{ display: "flex", justifyContent: "space-between", marginTop: "0.8rem" }}>
-                  <span style={{ fontSize: "0.95rem", color: "var(--color-text)", fontWeight: 500 }}>
-                    {slider.label1}
-                  </span>
-                  <span style={{ fontSize: "0.95rem", color: "var(--color-text)", fontWeight: 500 }}>
-                    {slider.label2}
-                  </span>
+              </div>
+              <div>
+                <p style={{ fontSize: "0.9rem", color: "var(--color-text-light)", fontStyle: "italic", marginBottom: "0.5rem" }}>
+                  Just now, you said:
+                </p>
+                <div style={{ borderLeft: "3px solid var(--color-gold-dark)", paddingLeft: "1.2rem" }}>
+                  <p style={{ fontSize: "1.05rem", color: "var(--color-text)", fontWeight: 500, lineHeight: 1.65, margin: 0 }}>
+                    {q7AnswerText}
+                  </p>
                 </div>
               </div>
             </div>
-          ))}
+          )}
+
+          {/* Q10 quote-back — the question the player chose for themselves */}
+          {q10AnswerText.trim().length > 0 && (
+            <div className="animate-fade-up delay-600" style={{ marginBottom: "2rem" }}>
+              <p style={{ fontSize: "0.9rem", color: "var(--color-text-light)", fontStyle: "italic", lineHeight: 1.7, marginBottom: "1rem", textAlign: "center" }}>
+                When asked what question you most needed to ask yourself — you chose:
+              </p>
+              <div style={{ borderLeft: "3px solid var(--color-gold-dark)", paddingLeft: "1.2rem" }}>
+                <p style={{ fontSize: "1.1rem", color: "var(--color-text)", fontWeight: 500, lineHeight: 1.65, fontStyle: "normal", margin: 0 }}>
+                  {q10AnswerText}
+                </p>
+              </div>
+            </div>
+          )}
+
+          {showContinue && (
+            <div className="animate-fade-up" style={{ marginTop: "auto", paddingTop: "2rem", width: "100%", maxWidth: "360px", margin: "0 auto" }}>
+              <button className="btn-primary" onClick={advancePhase}>Continue</button>
+            </div>
+          )}
         </div>
-      </section>
+      )}
 
-      {/* ── Section 03: What this pattern may mean ── */}
-      <section
-        className="animate-fade-up delay-800"
-        style={{ marginBottom: "5rem", textAlign: "center" }}
-      >
-        <SectionDivider number="03" label="What this pattern may mean" />
-
-        {/* Line 1: calm observation */}
-        <p style={{ fontSize: "1.15rem", lineHeight: 1.8, color: "var(--color-text-light)", marginBottom: "1.2rem" }}>
-          {resultData.reflectionLines[0]}
-        </p>
-
-        {/* Line 2: the benefit */}
-        <p style={{ fontSize: "1.15rem", lineHeight: 1.8, color: "var(--color-text-light)", marginBottom: "3rem" }}>
-          {resultData.reflectionLines[1]}
-        </p>
-
-        {/* Line 3: the hidden cost — set apart in a gold-tinted box */}
-        <div style={{
-          padding: "1.8rem 1.5rem",
-          background: "linear-gradient(135deg, rgba(251,229,184,0.25), rgba(243,206,133,0.1))",
-          borderRadius: "16px",
-          border: "1px solid rgba(243,206,133,0.3)"
-        }}>
-          <p style={{
-            fontSize: "1.25rem",
-            lineHeight: 1.8,
-            color: "var(--color-text)",
-            fontStyle: "italic",
-            margin: 0
-          }}>
-            {resultData.reflectionLines[2]}
+      {/* ═══════════════════════════════════════════════════════════════════
+          PHASE 3 — Benefit + Hidden Cost.
+          What this pattern gives you — and what it silently takes away.
+          ═══════════════════════════════════════════════════════════════════ */}
+      {phase === 3 && (
+        <div style={{ flex: 1, display: "flex", flexDirection: "column", textAlign: "center" }}>
+          {/* Benefit line */}
+          <p
+            className="animate-fade-up delay-200"
+            style={{ fontSize: "1.15rem", lineHeight: 1.8, color: "var(--color-text-light)", marginBottom: "3rem" }}
+          >
+            {resultData.reflectionLines[1]}
           </p>
+
+          {/* Hidden cost box — uses hidden-cost-pulse which chains fadeUp + gentlePulse
+              in a single animation declaration to avoid CSS override conflicts */}
+          <div
+            className="hidden-cost-pulse"
+            style={{
+              padding: "1.8rem 1.5rem",
+              background: "linear-gradient(135deg, rgba(251,229,184,0.25), rgba(243,206,133,0.1))",
+              borderRadius: "16px",
+              border: "1px solid rgba(243,206,133,0.3)",
+              marginBottom: "2rem"
+            }}
+          >
+            <p style={{ fontSize: "1.25rem", lineHeight: 1.8, color: "var(--color-text)", fontStyle: "italic", margin: 0 }}>
+              {resultData.reflectionLines[2]}
+            </p>
+          </div>
+
+          {showContinue && (
+            <div className="animate-fade-up" style={{ marginTop: "auto", paddingTop: "2rem", width: "100%", maxWidth: "360px", margin: "0 auto" }}>
+              <button className="btn-primary" onClick={advancePhase}>Continue</button>
+            </div>
+          )}
         </div>
-      </section>
+      )}
 
-      {/* ── Section 04: The bigger picture ── */}
-      <section
-        className="animate-fade-up delay-1000"
-        style={{ textAlign: "center", marginBottom: "5rem" }}
-      >
-        <SectionDivider number="04" label="The bigger picture" />
-
-        {/* Quiet opener — static, deliberately understated */}
-        <p style={{
-          fontSize: "1.25rem",
-          lineHeight: 1.9,
-          marginBottom: "2rem",
-          color: "var(--color-text-light)",
-          fontStyle: "italic"
-        }}>
-          "What determines your path is rarely a single, brilliant choice."
-        </p>
-
-        {/* Punchline — word-by-word reveal so the player cannot skim it.
-            Start delay of 0.8s gives the italic opener time to register first. */}
-        <p style={{ fontSize: "1.35rem", lineHeight: 1.9, color: "var(--color-text)", fontWeight: 500 }}>
-          <RevealWords
-            text="It is the quiet, automatic habit you fall back on every time you simply don't know what to do."
-            startDelay={0.8}
-          />
-        </p>
-      </section>
-
-      {/* ── Closing message — replaces the Share/Save buttons ──────────────────
-          The Share and Save CTAs were removed because they close the psychological
-          open loop prematurely. A player who shares or saves their result has
-          packaged and filed the experience. The game's design intent is to leave
-          them sitting with an unanswered question until the speaker returns.
-          ───────────────────────────────────────────────────────────────────── */}
-      <section className="animate-fade-up delay-1200" style={{ textAlign: "center" }}>
-        <div style={{
-          padding: "1.5rem",
-          borderTop: "1px solid rgba(243,206,133,0.35)"
-        }}>
-          <p style={{
-            fontSize: "1.05rem",
-            color: "var(--color-text-light)",
-            lineHeight: 1.7,
-            fontStyle: "italic",
-            margin: 0
-          }}>
-            The speaker will return shortly.
+      {/* ═══════════════════════════════════════════════════════════════════
+          PHASE 4 — Bigger Picture + Closing.
+          The final resting state. No continue button.
+          Final resting state with the closing question and breathing name.
+          ═══════════════════════════════════════════════════════════════════ */}
+      {phase === 4 && (
+        <div style={{ flex: 1, display: "flex", flexDirection: "column" }}>
+          {/* Quiet opener */}
+          <p
+            className="animate-fade-up delay-200"
+            style={{ fontSize: "1.25rem", lineHeight: 1.9, marginBottom: "2rem", color: "var(--color-text-light)", fontStyle: "italic", textAlign: "center" }}
+          >
+            "What determines your path is rarely a single, brilliant choice."
           </p>
-          <p style={{
-            fontSize: "1.1rem",
-            color: "var(--color-text)",
-            fontWeight: 500,
-            marginTop: "0.6rem",
-            letterSpacing: "0.5px"
-          }}>
-            Sit with this.
+
+          {/* Punchline — word-by-word reveal */}
+          <p
+            className="animate-fade-up delay-400"
+            style={{ fontSize: "1.35rem", lineHeight: 1.9, color: "var(--color-text)", fontWeight: 500, textAlign: "center", marginBottom: "3rem" }}
+          >
+            <RevealWords
+              text="It is the quiet, automatic habit you fall back on every time you simply don't know what to do."
+              startDelay={0.8}
+            />
           </p>
+
+          {/* Closing question */}
+          <div className="animate-fade-up delay-800" style={{ textAlign: "center", marginBottom: "4rem" }}>
+            <p style={{ fontSize: "1.6rem", fontWeight: 500, color: "var(--color-text)", lineHeight: 1.6 }}>
+              What has it cost you?
+            </p>
+            {name.trim() && (
+              <div
+                className="animate-breathe-delayed"
+                style={{ fontSize: "2.4rem", fontWeight: 400, color: "var(--color-text)", marginTop: "2rem" }}
+              >
+                {name.trim().split(" ")[0]}
+              </div>
+            )}
+          </div>
+
+          {/* CAE GOH watermark */}
+          <div style={{ textAlign: "center", marginTop: "3rem", opacity: 0.3, fontSize: "0.85rem", letterSpacing: "4px" }}>
+            CAE GOH
+          </div>
         </div>
-      </section>
-
-      <div
-        className="animate-fade-up delay-1200"
-        style={{
-          textAlign: "center",
-          marginTop: "3rem",
-          opacity: 0.3,
-          fontSize: "0.85rem",
-          letterSpacing: "4px"
-        }}
-      >
-        CAE GOH
-      </div>
+      )}
     </div>
   );
 };

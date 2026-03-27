@@ -113,7 +113,7 @@ export const StageIntroScreen: React.FC<StageIntroScreenProps> = ({
             opacity: 0
           }}
         >
-          The next five questions are not about what might happen.
+          The next questions are not about what might happen.
         </p>
 
         {/* Second body line — italic, softer — the emotional punchline */}
