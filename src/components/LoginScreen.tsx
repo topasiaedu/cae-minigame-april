@@ -43,14 +43,17 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin, isTransitioni
           className="animate-fade-up delay-400"
           style={{ marginBottom: "3rem", textAlign: "center", opacity: 0 }}
         >
-          <p style={{ marginBottom: "1.5rem", fontSize: "1.1rem", color: "var(--color-text)" }}>
-            Every path is shaped by moments where we had to decide before we were completely ready.
+          <p style={{ marginBottom: "0.9rem", fontSize: "1.2rem", color: "var(--color-text)" }}>
+            The first three months are done.
           </p>
-          <p style={{ marginBottom: "1.5rem" }}>
-            Over the next few minutes, we will revisit these choices.
+          <p style={{ marginBottom: "0.9rem", fontSize: "1.1rem", color: "var(--color-text)" }}>
+            Before April begins — this will show you how you have been deciding.
           </p>
-          <p style={{ fontStyle: "italic", opacity: 0.8 }}>
-            The mirror will only reflect what is already there.
+          <p style={{ marginBottom: "0.9rem", fontSize: "1rem", color: "var(--color-text)" }}>
+            It takes about 8 minutes. There are no right answers.
+          </p>
+          <p style={{ fontStyle: "italic", fontSize: "1rem", color: "var(--color-text)" }}>
+            As you answer, let your Q1 decisions come to mind.
           </p>
         </div>
 
@@ -83,24 +86,22 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin, isTransitioni
               id="login-email"
               type="email"
               className="input-field"
-              placeholder="Email (Optional)"
+              placeholder="Email (optional)"
               aria-label="Email address (optional)"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
           </div>
           <div style={{
-            fontSize: "0.8rem",
+            fontSize: "1rem",
             color: "var(--color-text-light)",
-            opacity: 0.7,
+            opacity: 0.9,
             textAlign: "center",
             marginTop: "-0.5rem",
             marginBottom: "1.2rem"
           }}>
-            So Cae can follow up with you after the session.
+            So Cae can follow up after the session.
           </div>
-
-          {/* "Begin" is an invitation. "Next" is a form label. */}
           <button type="submit" className="btn-primary" disabled={!name.trim()}>
             Begin
           </button>

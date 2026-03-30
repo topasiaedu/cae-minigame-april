@@ -4,6 +4,8 @@ import { ChevronLeft } from "lucide-react";
 
 interface QuestionScreenProps {
   question: Question;
+  /** Pre-resolved setup text — handles branching questions transparently */
+  resolvedSetup: string;
   questionIndex: number;
   totalQuestions: number;
   progressPercent: number;
@@ -37,6 +39,7 @@ type EchoContent =
 
 export const QuestionScreen: React.FC<QuestionScreenProps> = ({
   question,
+  resolvedSetup,
   questionIndex,
   totalQuestions,
   progressPercent,
@@ -50,7 +53,7 @@ export const QuestionScreen: React.FC<QuestionScreenProps> = ({
   // Reset selection state whenever a new question loads
   useEffect(() => {
     setSelected(null);
-  }, [question.id]);
+  }, [question.options]);
 
   /**
    * Shuffle the display order of options on each new question.
@@ -72,7 +75,7 @@ export const QuestionScreen: React.FC<QuestionScreenProps> = ({
       arr[j] = temp;
     }
     return arr;
-  }, [question.id]);
+  }, [question.options]);
 
   // Stage I: indices 0–2, Stage II: indices 3–5, Stage III: indices 6–9
   const stage = questionIndex < 3 ? 1 : questionIndex < 6 ? 2 : 3;
@@ -114,6 +117,10 @@ export const QuestionScreen: React.FC<QuestionScreenProps> = ({
    */
   const echoContent = useMemo((): EchoContent | null => {
     if (selected === null) return null;
+    // Cost question — show acknowledgment instead of dimension echo
+    if (question.isCostQuestion === true) {
+      return { type: "simple", text: "You named it." };
+    }
     // Echo comparison: only for Stage III questions Q7–Q9 (indices 6–8)
     const isEchoComparison = questionIndex >= 6 && questionIndex <= 8;
     if (isEchoComparison) {
@@ -162,7 +169,7 @@ export const QuestionScreen: React.FC<QuestionScreenProps> = ({
         </button>
 
         <div style={{ flex: 1, textAlign: "center" }}>
-          <div style={{ fontSize: "0.72rem", letterSpacing: "2px", opacity: 0.6, fontWeight: 600 }}>
+          <div style={{ fontSize: "1rem", letterSpacing: "2px", opacity: 0.9, fontWeight: 600, color: "var(--color-text)" }}>
             {stageLabel}
           </div>
           <div style={{ fontSize: "1.1rem", fontWeight: 500, marginTop: "0.1rem" }}>
@@ -208,7 +215,7 @@ export const QuestionScreen: React.FC<QuestionScreenProps> = ({
           lineHeight: 1.6,
           color: "var(--color-text)"
         }}>
-          {question.setup}{" "}
+          {resolvedSetup}{" "}
           <span style={{ fontWeight: 400 }}>{question.context}</span>
         </p>
       </div>
@@ -217,12 +224,10 @@ export const QuestionScreen: React.FC<QuestionScreenProps> = ({
         <p
           className="animate-fade-up delay-400"
           style={{
-            fontSize: "0.85rem",
-            fontStyle: "italic",
-            color: "var(--color-gold-dark)",
+            fontSize: "1rem",
+            color: "var(--color-text)",
             textAlign: "center",
-            marginBottom: "0.75rem",
-            opacity: 0
+            marginBottom: "0.75rem"
           }}
         >
           Choose the one least like you
@@ -281,7 +286,7 @@ export const QuestionScreen: React.FC<QuestionScreenProps> = ({
               >
                 {/* No position badge for Q10 — the question feels more like a contemplation */}
                 <span style={{
-                  fontSize: "0.95rem",
+                  fontSize: "1rem",
                   lineHeight: 1.45,
                   color: "var(--color-text)",
                   fontWeight: isChosen ? 500 : 400
@@ -353,14 +358,14 @@ export const QuestionScreen: React.FC<QuestionScreenProps> = ({
                   background: isChosen ? "var(--color-gold-dark)" : "rgba(0,0,0,0.05)",
                   color: isChosen ? "#fff" : "var(--color-text-light)",
                   fontWeight: 700,
-                  fontSize: "0.82rem",
+                  fontSize: "1rem",
                   transition: "all 0.4s ease"
                 }}>
                   {(idx + 1).toString()}
                 </span>
 
                 <span style={{
-                  fontSize: "0.95rem",
+                  fontSize: "1rem",
                   lineHeight: 1.45,
                   color: "var(--color-text)",
                   fontWeight: isChosen ? 500 : 400
@@ -381,7 +386,6 @@ export const QuestionScreen: React.FC<QuestionScreenProps> = ({
             style={{
               textAlign: "center",
               fontSize: "1.1rem",
-              fontStyle: "italic",
               color: "var(--color-text-light)",
               paddingTop: "1.5rem",
               paddingBottom: "0.5rem",

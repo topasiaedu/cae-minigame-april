@@ -1,5 +1,12 @@
 export type Dimension = "A" | "B" | "C" | "D";
 
+export interface BranchingSetup {
+  /** 0-based index of the question whose answer determines which variant to show */
+  branchesOn: number;
+  /** One setup string per dimension — keyed by the previous answer's dimension */
+  variants: Record<Dimension, string>;
+}
+
 export interface Option {
   id: Dimension;
   text: string;
@@ -7,171 +14,14 @@ export interface Option {
 
 export interface Question {
   id: number;
-  setup: string;
+  setup: string | BranchingSetup;
   context: string;
   options: Option[];
-  /** When true, this question asks the player to pick the option LEAST like them.
-   * Reversal answers are excluded from dominant dimension scoring. */
   isReversal?: boolean;
+  isCostQuestion?: boolean;
 }
 
-export interface Trigger {
-  stage: number;
-  condition: Dimension;
-  text: string;
-}
-
-export const questions: Question[] = [
-  // ─── Stage I (Q1–Q3): The Unknown ────────────────────────────────────────
-  // Theme: How do you react to opportunities before you have full information?
-  {
-    id: 1,
-    setup: "Your company is starting a new project, but the goal isn't clear yet.",
-    context: "Joining early gets you noticed, but you might take the blame if it fails. You usually:",
-    options: [
-      { id: "A", text: "Join first and figure it out later" },
-      { id: "B", text: "Watch for a while before deciding" },
-      { id: "C", text: "Check the risks to see if it's worth it" },
-      { id: "D", text: "Wait until there's a safe backup plan" }
-    ]
-  },
-  {
-    id: 2,
-    setup: "A chance to work on something big suddenly appears, but many details are missing.",
-    context: "If you don't decide now, someone else will take it. But the risks are real. You usually:",
-    options: [
-      { id: "A", text: "Grab it first, just to secure the spot" },
-      { id: "B", text: "Wait a bit longer until things are clearer" },
-      { id: "C", text: "Calculate the effort and payoff first" },
-      { id: "D", text: "Keep my distance to avoid being trapped" }
-    ]
-  },
-  {
-    // Reversal question: player picks the reaction most unlike them
-    id: 3,
-    isReversal: true,
-    setup: "An opportunity appears. The details are unclear. You have to decide now.",
-    context: "Which of these reactions would you almost never have?",
-    options: [
-      { id: "A", text: "Jump straight in before thinking it through" },
-      { id: "B", text: "Hold back and wait for more information" },
-      { id: "C", text: "Run the numbers before making any move" },
-      { id: "D", text: "Avoid committing until a safer option appears" }
-    ]
-  },
-
-  // ─── Stage II (Q4–Q6): The Aftermath ─────────────────────────────────────
-  // Theme: How do you reflect on past decisions and the chances you passed on?
-  {
-    id: 4,
-    setup: "You watch someone else succeed with a chance you decided to pass on.",
-    context: "Looking back, you:",
-    options: [
-      { id: "A", text: "Think I should have just tried earlier" },
-      { id: "B", text: "Think my choice to wait was still the smart move" },
-      { id: "C", text: "Want to figure out exactly why they succeeded" },
-      { id: "D", text: "Think everyone has their own pace — I wasn't wrong" }
-    ]
-  },
-  {
-    id: 5,
-    setup: "You remember a path you did not take.",
-    context: "Someone else took it. It worked out for them. When you replay that moment, you:",
-    options: [
-      { id: "A", text: "Wish I had just started without overthinking it" },
-      { id: "B", text: "Think waiting was still the right call at the time" },
-      { id: "C", text: "Want to understand exactly why it worked for them" },
-      { id: "D", text: "Think every path has its season — that one wasn't mine" }
-    ]
-  },
-  {
-    // Reversal question: player picks the perspective they would almost never take
-    id: 6,
-    isReversal: true,
-    setup: "Looking back at past decisions you've made,",
-    context: "which of these perspectives would you almost never take?",
-    options: [
-      { id: "A", text: "I should have acted sooner — waiting cost me" },
-      { id: "B", text: "I was right to pause — rushing would have made it worse" },
-      { id: "C", text: "I needed more data before I could have known" },
-      { id: "D", text: "Keeping my options open was the wisest thing I did" }
-    ]
-  },
-
-  // ─── Stage III (Q7–Q10): The Mirror ──────────────────────────────────────
-  // Theme: Direct confrontation with your own habitual patterns.
-  {
-    id: 7,
-    setup: "Whether you succeed or fail,",
-    context: "often doesn't depend on your initial idea. It depends on your hidden habits when things get hard. What most often stops you?",
-    options: [
-      { id: "A", text: "Rushing in, only to realize later I didn't think it through" },
-      { id: "B", text: "Waiting to feel totally sure, causing me to start too late" },
-      { id: "C", text: "Calculating the value so much that I lose my speed" },
-      { id: "D", text: "Refusing to close other doors, so I never fully commit" }
-    ]
-  },
-  {
-    id: 8,
-    setup: "Some habits keep repeating",
-    context: "not because they are smart, but because they feel safe. If you had to be honest, what makes you feel safe?",
-    options: [
-      { id: "A", text: "Simply moving — doing something feels better than nothing" },
-      { id: "B", text: "Waiting — at least I won't make an early mistake" },
-      { id: "C", text: "Thinking — planning it out means I won't waste resources" },
-      { id: "D", text: "Staying free — having room to escape feels best" }
-    ]
-  },
-  {
-    // Reversal question: player picks the hidden cost least like them
-    id: 9,
-    isReversal: true,
-    setup: "Every habit has a hidden price.",
-    context: "Which of these costs do you notice least in yourself?",
-    options: [
-      { id: "A", text: "Moving fast and spending energy fixing things later" },
-      { id: "B", text: "Waiting too long until the best moment quietly passes" },
-      { id: "C", text: "Over-planning until great ideas never get started" },
-      { id: "D", text: "Keeping options open until nothing is ever truly built" }
-    ]
-  },
-  {
-    id: 10,
-    setup: "Getting to where you are today,",
-    context: "the biggest factor wasn't one brilliant choice. It was the quiet habit that softly pushed you closer to some things — and further from others. What question must you ask yourself right now?",
-    options: [
-      { id: "A", text: "Do I move too fast, leaving mistakes I have to clean up later?" },
-      { id: "B", text: "Do I wait too long for proof, missing the doors I should have walked through?" },
-      { id: "C", text: "Do I focus too heavily on the math, letting passion die while I plan?" },
-      { id: "D", text: "Do I protect my freedom so much that I never truly commit to my life?" }
-    ]
-  }
-];
-
-// ─── Dynamic Reflection Triggers ─────────────────────────────────────────────
-// 8 unique texts (2 stages × 4 dimensions). Each is written in second-person
-// mirror style: name the pattern → describe it over time → end with a question.
-
-export const dynamicTriggers: Record<string, Record<Dimension, string>> = {
-  stage1: {
-    A: "Some people naturally move rapidly down a path so they don't miss out. Over time, does this early-action habit quietly repeat in other big choices?",
-    B: "Some people naturally wait for things to clear up before taking a step. Over time, does this deeply rooted hesitation softly echo in other big choices?",
-    C: "Some people naturally need to map out every risk before they begin. Over time, does this need for control repeatedly surface when faced with the unknown?",
-    D: "Some people naturally prefer to keep their escape doors open. Over time, does this quiet resistance to hard commitments dictate more of life than realized?"
-  },
-  stage2: {
-    A: "Moving quickly feels like taking charge. Over time, this constant motion simply becomes what you do. Does responding fast actually serve you, or has it just become your automatic rhythm?",
-    B: "Waiting for the dust to settle feels like the smart move. Over time, that pause quietly becomes your default gear. Are you holding back to see clearly, or has waiting simply become your habit?",
-    C: "Running the numbers first feels like the safest route. Over time, the need to measure everything slows your pace. Are you calculating the odds to win, or just to avoid making a mistake?",
-    D: "Leaving an open door feels like protecting your freedom. Over time, avoiding commitment becomes its own kind of cage. Are you keeping your options open to stay flexible, or simply to avoid being tied down?"
-  }
-};
-
-// ─── Result Interpretations ───────────────────────────────────────────────────
-// Each dimension maps to: primary chip, secondary chips, 5 sliders, 3 reflection lines.
-// Slider value: 50 = centre (balanced). < 50 = leans LEFT label. > 50 = leans RIGHT label.
-
-export const resultInterpretations: Record<Dimension, {
+export interface ResultInterpretation {
   chip: string;
   secondaryChips: string[];
   sliders: Array<{
@@ -181,9 +31,227 @@ export const resultInterpretations: Record<Dimension, {
     value: number;
   }>;
   reflectionLines: [string, string, string];
-}> = {
+  q1CostLine: string;
+}
+
+export const questions: Question[] = [
+  {
+    id: 1,
+    setup: "A new direction opens in your market. The information is incomplete. Others are watching the same space.",
+    context: "What do you do?",
+    options: [
+      { id: "A", text: "Move in now and adjust as I learn" },
+      { id: "B", text: "Hold back until the picture is clearer" },
+      { id: "C", text: "Run the numbers before I decide" },
+      { id: "D", text: "Position myself without fully committing" }
+    ]
+  },
+  {
+    id: 2,
+    setup: {
+      branchesOn: 0,
+      variants: {
+        A: "You moved first. Things are in motion — but a key detail surfaces that changes the picture. Something you would have caught with more time.",
+        B: "You held back. The space is clearer now, but two others have moved in. Your team is asking why you are still watching.",
+        C: "You ran the numbers. The data looks promising but not conclusive. A faster competitor has already launched while you were analysing.",
+        D: "You positioned yourself without committing. Both paths are still open, but your team is not sure which way you are heading."
+      }
+    },
+    context: "What do you do now?",
+    options: [
+      { id: "A", text: "Push forward — we will fix it as we go" },
+      { id: "B", text: "Pause and get clarity before the next move" },
+      { id: "C", text: "Map out exactly what changed before deciding" },
+      { id: "D", text: "Keep room to adjust — do not lock in yet" }
+    ]
+  },
+  {
+    id: 3,
+    setup: {
+      branchesOn: 1,
+      variants: {
+        A: "You pushed through again. A partner now needs your answer by end of day. You have about 70% of the information. This is your third fast call.",
+        B: "You paused. The picture is sharper, but the deadline did not pause with you. A partner needs your answer by end of day. You have about 70%.",
+        C: "You mapped it out. The analysis helped, but took time. A partner needs your answer by end of day. You have about 70%.",
+        D: "You kept room to adjust. Flexible — but a partner now needs a firm answer by end of day. You have about 70%."
+      }
+    },
+    context: "What do you do?",
+    options: [
+      { id: "A", text: "Decide now — 70% is enough" },
+      { id: "B", text: "Push the deadline — a wrong call is worse than a late one" },
+      { id: "C", text: "Use what I have to work out the outcomes first" },
+      { id: "D", text: "Give a soft answer I can adjust later" }
+    ]
+  },
+  {
+    id: 4,
+    setup: "Think of a real decision from the first three months of this year. Someone you know took the path you passed on — and it worked for them.",
+    context: "Looking back, you:",
+    options: [
+      { id: "A", text: "Think I should have moved sooner" },
+      { id: "B", text: "Still believe holding back was right at the time" },
+      { id: "C", text: "Want to understand exactly why it worked for them" },
+      { id: "D", text: "Think every business has its own timing" }
+    ]
+  },
+  {
+    id: 5,
+    setup: {
+      branchesOn: 3,
+      variants: {
+        A: "You wish you had moved sooner. Speed matters to you, even in hindsight. But every default has a price.",
+        B: "You stand by the wait. Patience matters to you. But every default has a price.",
+        C: "You want to understand the logic. Clarity matters more to you than speed. But every default has a price.",
+        D: "You see your own timing as valid. Flexibility matters to you. But every default has a price."
+      }
+    },
+    context: "In the first three months — what did your pattern cost you most?",
+    isCostQuestion: true,
+    options: [
+      { id: "A", text: "Relationships — people around me struggle to keep up or stay aligned" },
+      { id: "B", text: "Missed windows — some chances closed while I was still deciding" },
+      { id: "C", text: "Direction — I stay busy but not always heading the right way" },
+      { id: "D", text: "Energy — I keep running and it is starting to show" }
+    ]
+  },
+  {
+    id: 6,
+    isReversal: true,
+    setup: {
+      branchesOn: 4,
+      variants: {
+        A: "You said your pattern costs you relationships. A trusted advisor is describing how you make decisions.",
+        B: "You said your pattern costs you timing. A trusted advisor is describing how you make decisions.",
+        C: "You said your pattern costs you direction. A trusted advisor is describing how you make decisions.",
+        D: "You said your pattern costs you energy. A trusted advisor is describing how you make decisions."
+      }
+    },
+    context: "Which would they least say about you?",
+    options: [
+      { id: "A", text: "You move fast and fix later" },
+      { id: "B", text: "You wait until you are sure" },
+      { id: "C", text: "You need the data before you act" },
+      { id: "D", text: "You keep options open as long as possible" }
+    ]
+  },
+  {
+    id: 7,
+    setup: "When a strategy is not working, your automatic response is usually to:",
+    context: "",
+    options: [
+      { id: "A", text: "Try something different immediately" },
+      { id: "B", text: "Step back and watch longer" },
+      { id: "C", text: "Analyse what went wrong before changing anything" },
+      { id: "D", text: "Pull back — keep room to shift" }
+    ]
+  },
+  {
+    id: 8,
+    setup: {
+      branchesOn: 6,
+      variants: {
+        A: "You default to action. Be honest about the first three months of this year.",
+        B: "You default to watching. Be honest about the first three months of this year.",
+        C: "You default to analysis. Be honest about the first three months of this year.",
+        D: "You default to flexibility. Be honest about the first three months of this year."
+      }
+    },
+    context: "The decisions that mattered most were probably made:",
+    options: [
+      { id: "A", text: "Quickly — trusting instinct over data" },
+      { id: "B", text: "Slowly — waiting longer than I probably needed to" },
+      { id: "C", text: "Carefully — running the analysis until it felt safe enough" },
+      { id: "D", text: "Tentatively — committing just enough to stay flexible" }
+    ]
+  },
+  {
+    id: 9,
+    isReversal: true,
+    setup: {
+      branchesOn: 7,
+      variants: {
+        A: "You move fast and trust instinct. Every decision habit has a cost.",
+        B: "You move slowly and wait for signals. Every decision habit has a cost.",
+        C: "You move carefully and trust analysis. Every decision habit has a cost.",
+        D: "You move tentatively and stay flexible. Every decision habit has a cost."
+      }
+    },
+    context: "Which cost do you notice least in yourself?",
+    options: [
+      { id: "A", text: "Moving fast, then fixing avoidable mistakes" },
+      { id: "B", text: "Waiting until the best window quietly closes" },
+      { id: "C", text: "Over-planning until good ideas never start" },
+      { id: "D", text: "Keeping options open until nothing gets fully built" }
+    ]
+  },
+  {
+    id: 10,
+    setup: {
+      branchesOn: 8,
+      variants: {
+        A: "The cost you notice least — wasted motion — might be running right now.",
+        B: "The cost you notice least — closed windows — might already be happening.",
+        C: "The cost you notice least — unlaunched ideas — might be piling up.",
+        D: "The cost you notice least — nothing fully built — might be the story of this year."
+      }
+    },
+    context: "The months ahead will amplify your pattern. If one thing needs to change, what is it?",
+    options: [
+      { id: "A", text: "Am I moving fast because it is right — or because standing still feels uncomfortable?" },
+      { id: "B", text: "Am I waiting for certainty — or just avoiding the risk of being wrong?" },
+      { id: "C", text: "Am I planning carefully — or hiding behind the analysis?" },
+      { id: "D", text: "Am I staying flexible — or afraid to fully commit?" }
+    ]
+  }
+];
+
+export const reflectionObservations = {
+  stage1: {
+    A: "Three decisions in one story. Each time — you moved first.",
+    B: "Three decisions in one story. Each time — you held back.",
+    C: "Three decisions in one story. Each time — you ran the numbers.",
+    D: "Three decisions in one story. Each time — you kept a way out."
+  },
+  stage2: {
+    A: "Even in hindsight — you would still move first.",
+    B: "Even in hindsight — you would still wait.",
+    C: "Even in hindsight — you would still want the numbers.",
+    D: "Even in hindsight — you would still keep an exit open."
+  }
+} as const;
+
+export const reflectionBalancedLines = {
+  stage1: "Three situations. Three different responses.",
+  stage1Moderate: "Two out of three — the same instinct.",
+  stage2: "Looking back — no single pattern. But something drove each choice.",
+  stage2Moderate: "Even looking back — the same instinct shows up."
+} as const;
+
+export const reflectionFriction = {
+  stage1Clear: "How many times did this happen in the first three months?",
+  stage1Balanced: "In the first three months — was it this mixed, or did one instinct take over?",
+  stage2Clear: "Is this the price you want to keep paying?",
+  stage2Balanced: "Even without a clear pattern — is the cost adding up?"
+} as const;
+
+export const stageIBehaviorText: Record<Dimension, string> = {
+  A: "moved first",
+  B: "held back",
+  C: "ran the numbers",
+  D: "kept your options open"
+};
+
+export const q4DescriptionText: Record<Dimension, string> = {
+  A: "you should have moved sooner",
+  B: "holding back was still right",
+  C: "you wanted to understand the logic",
+  D: "the timing was just different"
+};
+
+export const resultInterpretations: Record<Dimension, ResultInterpretation> = {
   A: {
-    chip: "Early movement",
+    chip: "Early Movement",
     secondaryChips: ["Adjust as you go", "Stay in motion", "Before full clarity", "Short cycles"],
     sliders: [
       { label1: "Move first",        label2: "Think first",      title: "When a chance appears",           value: 22 },
@@ -196,10 +264,11 @@ export const resultInterpretations: Record<Dimension, {
       "You start before everything is clear.",
       "This keeps you in motion when others are still hesitating.",
       "But over time, it becomes hard to tell the difference between moving with purpose — and simply staying busy."
-    ]
+    ],
+    q1CostLine: "In the first three months — was some of that motion actually just noise?"
   },
   B: {
-    chip: "Seeking clarity",
+    chip: "Seeking Clarity",
     secondaryChips: ["Wait and see", "Gathering data", "Holds for more signal", "Steady pace"],
     sliders: [
       { label1: "Move first",        label2: "Think first",      title: "When a chance appears",           value: 80 },
@@ -212,10 +281,11 @@ export const resultInterpretations: Record<Dimension, {
       "You prefer to wait until the picture is clearer.",
       "This protects you from early, costly mistakes.",
       "But over time, the window for some decisions quietly closes while you are still watching."
-    ]
+    ],
+    q1CostLine: "In the first three months — did some of that caution actually cost you a window?"
   },
   C: {
-    chip: "Calculated risk",
+    chip: "Calculated Risk",
     secondaryChips: ["Numbers first", "Maps the risk first", "Minimizing waste", "Firm logic"],
     sliders: [
       { label1: "Move first",        label2: "Think first",      title: "When a chance appears",           value: 72 },
@@ -228,10 +298,11 @@ export const resultInterpretations: Record<Dimension, {
       "You measure before you move.",
       "This keeps you from wasting energy on things that don't add up.",
       "But over time, the habit of calculating can quietly kill things before they even have a chance to begin."
-    ]
+    ],
+    q1CostLine: "In the first three months — did some of that planning actually stop something from starting?"
   },
   D: {
-    chip: "Preserving options",
+    chip: "Preserving Options",
     secondaryChips: ["Flexibility", "Avoiding lock-in", "Always pivoting", "Keeping exits open"],
     sliders: [
       { label1: "Move first",        label2: "Think first",      title: "When a chance appears",           value: 45 },
@@ -244,6 +315,22 @@ export const resultInterpretations: Record<Dimension, {
       "You protect your freedom to change direction.",
       "This keeps you from being trapped by choices that no longer fit.",
       "But over time, keeping an exit nearby can quietly prevent you from building anything that truly lasts."
-    ]
+    ],
+    q1CostLine: "In the first three months — did some of that flexibility actually prevent you from building?"
   }
 };
+
+/**
+ * Resolves the setup text for a question. If the setup is a plain string, returns it directly.
+ * If it is a BranchingSetup, looks up the previous answer and returns the matching variant.
+ */
+export function resolveSetup(question: Question, answers: Dimension[]): string {
+  if (typeof question.setup === "string") {
+    return question.setup;
+  }
+  const previousAnswer = answers[question.setup.branchesOn];
+  if (previousAnswer === undefined) {
+    return question.setup.variants.A;
+  }
+  return question.setup.variants[previousAnswer];
+}

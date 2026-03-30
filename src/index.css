@@ -10,7 +10,7 @@
 
   /* Colour system */
   --color-text:       #2c251d;
-  --color-text-light: #5f5548;
+  --color-text-light: #4a3f34;
   --color-bg-primary: #fcfbf9;
 
   --color-gold-light: #fbe5b8;
@@ -345,30 +345,6 @@ button:focus-visible {
   width: 0;
 }
 
-/* ─── Surprise Screen Progress Line ─────────────────────────────────────── */
-
-/**
- * 4-second linear fill that spans the full width of the screen.
- * Duration matches the SurpriseScreen auto-advance timer exactly.
- * The line signals to the player that waiting is intentional, not a bug.
- */
-@keyframes surpriseProgress {
-  0%   { width: 0%; }
-  100% { width: 100%; }
-}
-
-.surprise-progress {
-  position: absolute;
-  bottom: 2.5rem;
-  left: 0;
-  height: 1px;
-  width: 0%;
-  background: var(--color-gold-dark);
-  opacity: 0.45;
-  animation: surpriseProgress 4s linear forwards;
-  pointer-events: none;
-}
-
 /* ─── Result Page Entry Curtain ──────────────────────────────────────────── */
 
 /**
@@ -405,38 +381,28 @@ button:focus-visible {
   background: linear-gradient(90deg, rgba(200, 110, 40, 0.85), rgba(160, 70, 20, 1)) !important;
 }
 
-/* ─── Character-by-Character Reveal ─────────────────────────────────────── */
+/* ─── Slider Track ───────────────────────────────────────────────────────── */
 
 /**
- * Used on Reflection 2's header "A silent repetition."
- * Each character span is given an increasing animation-delay inline.
- * The result: the phrase assembles itself character by character,
- * creating a felt sense that the pattern is being named slowly.
+ * Track container for the result page dimension sliders.
+ * overflow: hidden ensures the fill bar's border-radius is clipped cleanly.
  */
-@keyframes charReveal {
-  0%   { opacity: 0; transform: translateY(8px); }
-  100% { opacity: 1; transform: translateY(0);   }
-}
-
-.char-reveal-container {
-  display: inline;
-}
-
-.char-span {
-  display: inline-block;
-  opacity: 0;
-  animation: charReveal 0.35s ease forwards;
-}
-
-/* Preserve space characters in the reveal */
-.char-span-space {
-  display: inline-block;
-  width: 0.28em;
+.slider-track {
+  flex: 1;
+  height: 3px;
+  background: rgba(0,0,0,0.06);
+  border-radius: 2px;
+  position: relative;
+  margin: 0 0.6rem;
+  overflow: hidden;
 }
 
 /* ─── Extended Stagger Delays ────────────────────────────────────────────── */
 
+/* Delay classes for extended stagger on reflection screen */
 .delay-1400 { animation-delay: 1.4s; }
+.delay-1600 { animation-delay: 1.6s; }
+.delay-1800 { animation-delay: 1.8s; }
 
 @keyframes gentlePulse {
   0%   { transform: scale(1); }
@@ -468,4 +434,36 @@ button:focus-visible {
   width: 0;
   opacity: 0;
   animation: goldLineExtend 3.5s ease-out forwards;
+}
+
+/* ─── Result Distribution Bar ────────────────────────────────────────────── */
+.distribution-row {
+  display: grid;
+  grid-template-columns: minmax(120px, 1fr) 2fr auto;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.distribution-label {
+  font-size: 1rem;
+  color: var(--color-text);
+}
+
+.distribution-track {
+  height: 0.6rem;
+  background: rgba(0, 0, 0, 0.08);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.distribution-fill {
+  height: 100%;
+  background: var(--color-gold-mid);
+  border-radius: 999px;
+  transition: width 0.9s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.distribution-count {
+  font-size: 1rem;
+  color: var(--color-text);
 }

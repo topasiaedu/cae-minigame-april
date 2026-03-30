@@ -3,11 +3,10 @@ import { useGameState } from "./hooks/useGameState";
 import { LoginScreen }      from "./components/LoginScreen";
 import { QuestionScreen }   from "./components/QuestionScreen";
 import { ReflectionScreen } from "./components/ReflectionScreen";
-import { SurpriseScreen }   from "./components/SurpriseScreen";
-import { BreatheScreen }    from "./components/BreatheScreen";
 import { StageIntroScreen } from "./components/StageIntroScreen";
+import { ConfrontationScreen } from "./components/ConfrontationScreen";
 import { ResultScreen }     from "./components/ResultScreen";
-import { questions, Dimension } from "./data/content";
+import { questions, Dimension, stageIBehaviorText, q4DescriptionText } from "./data/content";
 
 function App() {
   const gameState = useGameState();
@@ -25,10 +24,10 @@ function App() {
    * so far. Used to drive subliminal ambient orb adjustments. Returns null if
    * no answers have been submitted yet.
    */
-  const currentDominant: Dimension | null = useMemo(() => {
-    if (gameState.answers.length === 0) return null;
-    return gameState.computeDominantDimension(0, gameState.answers.length);
-  }, [gameState.answers]);
+  const currentDominant: Dimension | null =
+    gameState.answers.length === 0
+      ? null
+      : gameState.computeDominantDimension(0, gameState.answers.length);
 
   /**
    * Subliminal orb adjustments based on the player's emerging behavioural pattern.
@@ -111,6 +110,7 @@ function App() {
         {gameState.stage === "question" && gameState.currentQuestion && (
           <QuestionScreen
             question={gameState.currentQuestion}
+            resolvedSetup={gameState.currentResolvedSetup}
             questionIndex={gameState.questionIndex}
             totalQuestions={questions.length}
             progressPercent={gameState.progressPercent}
@@ -131,31 +131,34 @@ function App() {
             isTransitioning={gameState.isTransitioning}
             onBack={gameState.goBack}
             name={gameState.user.name}
+            stageAnswers={reflectionSlice}
+            allAnswers={gameState.answers}
+            stageIDominant={gameState.stageIDominant}
+            playerCostText={gameState.playerCostText}
           />
         )}
 
-        {/* ── Surprise Screen (shown once, between Reflection 2 and Stage III Intro) ── */}
-        {gameState.stage === "surprise" && (
-          <SurpriseScreen
-            onProceed={gameState.proceedFromSurprise}
-            isTransitioning={gameState.isTransitioning}
-          />
-        )}
-
-        {/* Breathe Screen (shown once, between Surprise and Stage III Intro) */}
-        {gameState.stage === "breathe" && (
-          <BreatheScreen
-            onProceed={gameState.proceedFromBreathe}
-            isTransitioning={gameState.isTransitioning}
-          />
-        )}
-
-        {/* ── Stage III intro (shown once, before Q7) ── */}
+        {/* ── Stage intro (Stage I or II) ── */}
         {gameState.stage === "stageIntro" && (
           <StageIntroScreen
+            stageNumber={gameState.stageIntroNumber}
             onProceed={gameState.proceedFromStageIntro}
             isTransitioning={gameState.isTransitioning}
             onBack={gameState.goBack}
+          />
+        )}
+
+        {/* ── Confrontation (replaces surprise + breathe + stage III intro) ── */}
+        {gameState.stage === "confrontation" && (
+          <ConfrontationScreen
+            onProceed={gameState.proceedFromConfrontation}
+            isTransitioning={gameState.isTransitioning}
+            onBack={gameState.goBack}
+            stageIDominant={gameState.stageIDominant}
+            hasContradiction={gameState.hasContradiction}
+            stageIBehaviorText={stageIBehaviorText[gameState.stageIDominant]}
+            q4DescriptionText={gameState.answers[3] !== undefined ? q4DescriptionText[gameState.answers[3]] : ""}
+            playerCostText={gameState.playerCostText}
           />
         )}
 
@@ -165,11 +168,14 @@ function App() {
             name={gameState.user.name}
             finalDimension={gameState.finalDominantDimension}
             isTied={gameState.finalResultIsTied}
+            tiedDimensions={gameState.tiedDimensions}
+            answerCounts={gameState.answerCounts}
             q10AnswerText={gameState.q10AnswerText}
             q1AnswerText={gameState.q1AnswerText}
-            q7AnswerText={gameState.q7AnswerText}
+            q8AnswerText={gameState.q8AnswerText}
             isTransitioning={gameState.isTransitioning}
             onBack={gameState.goBack}
+            playerCostText={gameState.playerCostText}
           />
         )}
 
