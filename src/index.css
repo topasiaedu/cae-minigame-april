@@ -64,9 +64,7 @@ body, html {
   min-height: 100vh;
   width: 100%;
   padding: 2.5rem 1.5rem;
-  background: var(--glass-bg);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  background: transparent;
   display: flex;
   flex-direction: column;
 }
@@ -74,8 +72,6 @@ body, html {
 /* Elevated Glass Card */
 .glass-card {
   background: var(--glass-card);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
   border: 1px solid var(--glass-border);
   border-radius: 20px;
   padding: 1.8rem;
@@ -381,21 +377,7 @@ button:focus-visible {
   background: linear-gradient(90deg, rgba(200, 110, 40, 0.85), rgba(160, 70, 20, 1)) !important;
 }
 
-/* ─── Slider Track ───────────────────────────────────────────────────────── */
 
-/**
- * Track container for the result page dimension sliders.
- * overflow: hidden ensures the fill bar's border-radius is clipped cleanly.
- */
-.slider-track {
-  flex: 1;
-  height: 3px;
-  background: rgba(0,0,0,0.06);
-  border-radius: 2px;
-  position: relative;
-  margin: 0 0.6rem;
-  overflow: hidden;
-}
 
 /* ─── Extended Stagger Delays ────────────────────────────────────────────── */
 
@@ -466,4 +448,68 @@ button:focus-visible {
 .distribution-count {
   font-size: 1rem;
   color: var(--color-text);
+}
+
+/* ── Warning box — Section 2 "The Pattern You Rarely Used" ── */
+.warning-box {
+  background: rgba(180, 50, 30, 0.06);
+  border: 1px solid rgba(180, 50, 30, 0.3);
+  border-radius: 16px;
+  padding: 1.4rem 1.2rem;
+}
+
+.warning-label {
+  font-size: 0.7rem;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: rgba(180, 50, 30, 0.85);
+  margin-bottom: 0.8rem;
+  font-family: 'Cormorant Garamond', serif;
+}
+
+/* ── Narrative pull-quotes — player's own words, visually separated ── */
+
+/**
+ * Gold-tinted pull-quote block used in Section 1 "The Path You Walked".
+ * Used to echo back Q1 (first move) and Q5 (named cost) in the player's
+ * own words, creating visual rhythm between prose paragraphs.
+ */
+.narrative-quote {
+  border-left: 2px solid rgba(204, 153, 56, 0.5);
+  padding-left: 1rem;
+  background: rgba(251, 229, 184, 0.08);
+  border-radius: 0 8px 8px 0;
+  padding-top: 0.6rem;
+  padding-bottom: 0.6rem;
+  padding-right: 0.8rem;
+}
+
+.narrative-quote__label {
+  font-size: 0.68rem;
+  letter-spacing: 1.8px;
+  text-transform: uppercase;
+  color: var(--color-text-light);
+  margin-bottom: 0.35rem;
+  font-family: 'Cormorant Garamond', serif;
+}
+
+.narrative-quote__text {
+  font-size: 1.05rem;
+  font-style: italic;
+  color: var(--color-text);
+  line-height: 1.65;
+  font-family: 'Cormorant Garamond', serif;
+}
+
+/**
+ * Warning-tinted variant of the pull-quote used inside the blind-spot box
+ * to echo back the Q9 answer (cost the player notices least in themselves).
+ */
+.narrative-quote--warning {
+  border-left-color: rgba(180, 50, 30, 0.4);
+  background: rgba(180, 50, 30, 0.05);
+}
+
+.narrative-quote__label--warning {
+  color: rgba(180, 50, 30, 0.75);
 }

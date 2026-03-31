@@ -111,6 +111,14 @@ export function useGameState() {
     return option === undefined ? "" : option.text;
   }, [answers]);
 
+  /** Q9 answer text — "Which cost do you notice least in yourself?" (index 8, NON_SCORED) */
+  const q9AnswerText = useMemo((): string => {
+    const answer = answers[8];
+    if (answer === undefined) return "";
+    const option = questions[8].options.find((item) => item.id === answer);
+    return option === undefined ? "" : option.text;
+  }, [answers]);
+
   const progressPercent = useMemo((): number => Math.min(100, Math.round((questionIndex / questions.length) * 100)), [questionIndex]);
 
   const playerCostText = useMemo((): string => {
@@ -242,6 +250,7 @@ export function useGameState() {
     q10AnswerText,
     q1AnswerText,
     q8AnswerText,
+    q9AnswerText,
     progressPercent,
     isTransitioning,
     playerCostText,

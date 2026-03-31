@@ -22,16 +22,46 @@ export interface Question {
 }
 
 export interface ResultInterpretation {
+  /**
+   * Short pattern label. Used in the distribution bar (Phase 3) and the
+   * "YOUR PATTERN" pill in Phase 1.
+   */
   chip: string;
-  secondaryChips: string[];
-  sliders: Array<{
-    label1: string;
-    label2: string;
-    title: string;
-    value: number;
-  }>;
-  reflectionLines: [string, string, string];
+
+  /**
+   * Two recognition/strength lines.
+   * [0] = recognition sentence shown in Phase 1
+   * [1] = strength sentence shown in Phase 2 (paragraph 1)
+   *
+   * The third shadow line that previously existed here has been moved into
+   * pathWalked[2] where it is expanded into a full paragraph.
+   */
+  reflectionLines: [string, string];
+
+  /**
+   * Personalised callback question shown in Phase 2, tied to the player's
+   * Q1 answer (their first three months decision context).
+   */
   q1CostLine: string;
+
+  /**
+   * Three paragraphs for Section 1 "The Path You Walked" in Phase 3.
+   * Uses {Q1}, {Q8}, {COST}, {COUNT} as interpolation tokens:
+   *   {Q1}    = player's Q1 answer text
+   *   {Q8}    = player's Q8 answer text
+   *   {COST}  = player's Q5 answer text (what the pattern cost them)
+   *   {COUNT} = number of scored questions where they chose this dimension
+   */
+  pathWalked: [string, string, string];
+
+  /**
+   * Three paragraphs for Section 2 "The Pattern You Rarely Used" in Phase 3.
+   * Shown when THIS dimension is the player's weakest (lowest answerCount).
+   * Uses {Q9}, {COUNT} as interpolation tokens:
+   *   {Q9}    = player's Q9 answer text (cost they notice least)
+   *   {COUNT} = number of times they chose this dimension (may be 0)
+   */
+  weaknessNarrative: [string, string, string];
 }
 
 export const questions: Question[] = [
@@ -252,71 +282,75 @@ export const q4DescriptionText: Record<Dimension, string> = {
 export const resultInterpretations: Record<Dimension, ResultInterpretation> = {
   A: {
     chip: "Early Movement",
-    secondaryChips: ["Adjust as you go", "Stay in motion", "Before full clarity", "Short cycles"],
-    sliders: [
-      { label1: "Move first",        label2: "Think first",      title: "When a chance appears",           value: 22 },
-      { label1: "Trust the feeling", label2: "Wait for proof",   title: "When information is incomplete",  value: 25 },
-      { label1: "Go all in",         label2: "Keep a way out",   title: "When commitment is required",     value: 40 },
-      { label1: "Act now",           label2: "Slow down",        title: "When time pressure hits",         value: 18 },
-      { label1: "Keep moving",       label2: "Stop and rethink", title: "When something goes wrong",       value: 20 }
-    ],
     reflectionLines: [
       "You start before everything is clear.",
-      "This keeps you in motion when others are still hesitating.",
-      "But over time, it becomes hard to tell the difference between moving with purpose — and simply staying busy."
+      "This keeps you in motion when others are still hesitating."
     ],
-    q1CostLine: "In the first three months — was some of that motion actually just noise?"
+    q1CostLine: "In the first three months — was some of that motion actually just noise?",
+    pathWalked: [
+      "Not because the picture was clear. Because waiting felt like falling behind.",
+      "{COUNT} out of 7 choices went the same way — moving before the fog lifted. You are the person who builds while others are still in the meeting.",
+      "But the pattern carries a quiet cost. Work-life balance does not collapse — it slips. A dinner half-attended. A conversation you were too far ahead to be present for. The drive that builds things is the same drive that makes the present invisible."
+    ],
+    weaknessNarrative: [
+      "Early Movement showed up just {COUNT} out of 7 times. The impulse to move before everything was clear was the one you resisted most.",
+      "That resistance has protected you. But the cost of not starting is invisible — no trace, no record. Just a slightly smaller version of what could have existed.",
+      "Is there something you have been waiting to start that is already overdue?"
+    ]
   },
   B: {
     chip: "Seeking Clarity",
-    secondaryChips: ["Wait and see", "Gathering data", "Holds for more signal", "Steady pace"],
-    sliders: [
-      { label1: "Move first",        label2: "Think first",      title: "When a chance appears",           value: 80 },
-      { label1: "Trust the feeling", label2: "Wait for proof",   title: "When information is incomplete",  value: 85 },
-      { label1: "Go all in",         label2: "Keep a way out",   title: "When commitment is required",     value: 75 },
-      { label1: "Act now",           label2: "Slow down",        title: "When time pressure hits",         value: 82 },
-      { label1: "Keep moving",       label2: "Stop and rethink", title: "When something goes wrong",       value: 78 }
-    ],
     reflectionLines: [
       "You prefer to wait until the picture is clearer.",
-      "This protects you from early, costly mistakes.",
-      "But over time, the window for some decisions quietly closes while you are still watching."
+      "This protects you from early, costly mistakes."
     ],
-    q1CostLine: "In the first three months — did some of that caution actually cost you a window?"
+    q1CostLine: "In the first three months — did some of that caution actually cost you a window?",
+    pathWalked: [
+      "You needed the picture clearer before you moved. That is not hesitation — that is your standard.",
+      "{COUNT} out of 7 choices went the same way — holding back, waiting, protecting your position. You are the person who asks the question everyone else skipped.",
+      "But the goal has always been clear to you. The gap is the starting. Some windows close while you are still gathering certainty — and you know, if you are honest, which ones those were."
+    ],
+    weaknessNarrative: [
+      "Seeking Clarity showed up just {COUNT} out of 7 times. You rarely paused to gather more before acting.",
+      "Speed builds things. But it also creates cleanup. Some decisions made quickly may still be showing up in the results.",
+      "Is there a pattern from the first three months where going fast cost you something that only became visible later?"
+    ]
   },
   C: {
     chip: "Calculated Risk",
-    secondaryChips: ["Numbers first", "Maps the risk first", "Minimizing waste", "Firm logic"],
-    sliders: [
-      { label1: "Move first",        label2: "Think first",      title: "When a chance appears",           value: 72 },
-      { label1: "Trust the feeling", label2: "Wait for proof",   title: "When information is incomplete",  value: 88 },
-      { label1: "Go all in",         label2: "Keep a way out",   title: "When commitment is required",     value: 60 },
-      { label1: "Act now",           label2: "Slow down",        title: "When time pressure hits",         value: 70 },
-      { label1: "Keep moving",       label2: "Stop and rethink", title: "When something goes wrong",       value: 80 }
-    ],
     reflectionLines: [
       "You measure before you move.",
-      "This keeps you from wasting energy on things that don't add up.",
-      "But over time, the habit of calculating can quietly kill things before they even have a chance to begin."
+      "This keeps you from wasting energy on things that do not add up."
     ],
-    q1CostLine: "In the first three months — did some of that planning actually stop something from starting?"
+    q1CostLine: "In the first three months — did some of that planning actually stop something from starting?",
+    pathWalked: [
+      "Precision before movement. Logic before commitment. That was your first answer, and it echoed.",
+      "{COUNT} out of 7 choices went the same way — mapping the risk first, protecting the downside. You do not waste resources on things that do not add up.",
+      "But the pattern has a blind spot that always looks like thoroughness. Opportunities were not lost to bad luck — they were reviewed to death. Perfectionism does not feel like fear. It feels like standards."
+    ],
+    weaknessNarrative: [
+      "Calculated Risk showed up just {COUNT} out of 7 times. The analytical, detail-first mode was the one you used least.",
+      "You tend to trust feel over formula. In the right moments, that is an asset. But some decisions may have been made without a full accounting of what they would actually cost.",
+      "What is one decision from the first three months where the numbers mattered more than you gave them credit for?"
+    ]
   },
   D: {
     chip: "Preserving Options",
-    secondaryChips: ["Flexibility", "Avoiding lock-in", "Always pivoting", "Keeping exits open"],
-    sliders: [
-      { label1: "Move first",        label2: "Think first",      title: "When a chance appears",           value: 45 },
-      { label1: "Trust the feeling", label2: "Wait for proof",   title: "When information is incomplete",  value: 42 },
-      { label1: "Go all in",         label2: "Keep a way out",   title: "When commitment is required",     value: 85 },
-      { label1: "Act now",           label2: "Slow down",        title: "When time pressure hits",         value: 50 },
-      { label1: "Keep moving",       label2: "Stop and rethink", title: "When something goes wrong",       value: 55 }
-    ],
     reflectionLines: [
       "You protect your freedom to change direction.",
-      "This keeps you from being trapped by choices that no longer fit.",
-      "But over time, keeping an exit nearby can quietly prevent you from building anything that truly lasts."
+      "This keeps you from being trapped by choices that no longer fit."
     ],
-    q1CostLine: "In the first three months — did some of that flexibility actually prevent you from building?"
+    q1CostLine: "In the first three months — did some of that flexibility actually prevent you from building?",
+    pathWalked: [
+      "Keep the exits open. Stay in the room without fully belonging to it. That was your first instinct, and it stayed.",
+      "{COUNT} out of 7 choices went the same way — staying flexible, keeping room to shift. You read the room faster than most.",
+      "But the pattern is easily pulled. The next opportunity catches your eye before the current one is finished. Nothing gets fully built when everything stays tentative. The freedom you protect may already be costing you the depth you want."
+    ],
+    weaknessNarrative: [
+      "Preserving Options showed up just {COUNT} out of 7 times. Flexibility — keeping exits open, avoiding lock-in — was the pattern you used least.",
+      "You tend to commit fully. That builds depth. But full commitment also means carrying things longer than you should — out of identity rather than wisdom.",
+      "Is there something you are still holding that you should have put down by now?"
+    ]
   }
 };
 

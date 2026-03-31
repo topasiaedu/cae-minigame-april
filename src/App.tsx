@@ -173,6 +173,7 @@ function App() {
             q10AnswerText={gameState.q10AnswerText}
             q1AnswerText={gameState.q1AnswerText}
             q8AnswerText={gameState.q8AnswerText}
+            q9AnswerText={gameState.q9AnswerText}
             isTransitioning={gameState.isTransitioning}
             onBack={gameState.goBack}
             playerCostText={gameState.playerCostText}

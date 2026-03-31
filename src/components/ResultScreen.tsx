@@ -2,6 +2,17 @@ import React, { useEffect, useState } from "react";
 import { Dimension, resultInterpretations } from "../data/content";
 import { ChevronLeft } from "lucide-react";
 
+/**
+ * Replaces {TOKEN} placeholders in a template string with provided values.
+ * Used to inject player-specific data into narrative copy stored in content.ts.
+ */
+function interpolate(template: string, tokens: Record<string, string>): string {
+  return Object.entries(tokens).reduce(
+    (result, [key, value]) => result.replace(new RegExp(`\\{${key}\\}`, "g"), value),
+    template
+  );
+}
+
 interface ResultScreenProps {
   name: string;
   finalDimension: Dimension;
@@ -11,6 +22,8 @@ interface ResultScreenProps {
   q10AnswerText: string;
   q1AnswerText: string;
   q8AnswerText: string;
+  /** Player's Q9 answer text — "Which cost do you notice least in yourself?" */
+  q9AnswerText: string;
   isTransitioning: boolean;
   onBack: () => void;
   /** Player's Q5 cost answer text */
@@ -26,6 +39,7 @@ export const ResultScreen: React.FC<ResultScreenProps> = ({
   q10AnswerText,
   q1AnswerText,
   q8AnswerText,
+  q9AnswerText,
   isTransitioning,
   onBack,
   playerCostText
@@ -33,7 +47,6 @@ export const ResultScreen: React.FC<ResultScreenProps> = ({
   const resultData = resultInterpretations[finalDimension];
   const [phase, setPhase] = useState(1);
   const [showContinue, setShowContinue] = useState(false);
-  const [slidersVisible, setSlidersVisible] = useState(false);
 
   useEffect(() => {
     if (phase < 3 && !isTransitioning) {
@@ -45,15 +58,6 @@ export const ResultScreen: React.FC<ResultScreenProps> = ({
     }
     return undefined;
   }, [phase, isTransitioning]);
-
-  useEffect(() => {
-    if (phase === 3) {
-      const timer = setTimeout(() => setSlidersVisible(true), 300);
-      return () => clearTimeout(timer);
-    }
-    setSlidersVisible(false);
-    return undefined;
-  }, [phase]);
 
   const advancePhase = (): void => {
     setPhase((previous) => Math.min(previous + 1, 3));
@@ -83,6 +87,38 @@ export const ResultScreen: React.FC<ResultScreenProps> = ({
 
   const hasQ10 = q10AnswerText.trim().length > 0;
   const hasCost = playerCostText.trim().length > 0;
+
+  /** The minimum answer count across all dimensions, used to find blind spots. */
+  const minCount = Math.min(
+    answerCounts.A,
+    answerCounts.B,
+    answerCounts.C,
+    answerCounts.D
+  );
+
+  /**
+   * All dimensions that share the lowest answer count.
+   * There may be more than one if the player's answers are evenly spread.
+   */
+  const weakestDimensions: Dimension[] = (["A", "B", "C", "D"] as Dimension[]).filter(
+    (dimension) => answerCounts[dimension] === minCount
+  );
+
+  /**
+   * Token map for pathWalked — only COUNT is interpolated; player's own words
+   * are rendered as styled pull-quotes in the JSX, not embedded in prose.
+   */
+  const pathWalkedTokens: Record<string, string> = {
+    COUNT: String(answerCounts[finalDimension])
+  };
+
+  /**
+   * Builds the token map for a given dimension's weaknessNarrative.
+   * Only COUNT is interpolated; Q9 is rendered as a pull-quote in the JSX.
+   */
+  const weaknessTokens = (dimension: Dimension): Record<string, string> => ({
+    COUNT: String(answerCounts[dimension])
+  });
 
   return (
     <div className={`glass-container ${transClass}`} style={{ paddingBottom: "4rem" }}>
@@ -255,28 +291,6 @@ export const ResultScreen: React.FC<ResultScreenProps> = ({
             {resultData.reflectionLines[1]}
           </p>
 
-          <div
-            className="hidden-cost-pulse"
-            style={{
-              padding: "1.4rem 1.2rem",
-              background: "linear-gradient(135deg, rgba(251,229,184,0.25), rgba(243,206,133,0.1))",
-              borderRadius: "16px",
-              border: "1px solid rgba(243,206,133,0.3)",
-              marginBottom: "2rem"
-            }}
-          >
-            <p
-              style={{
-                fontSize: "1.15rem",
-                lineHeight: 1.7,
-                color: "var(--color-text)",
-                margin: 0
-              }}
-            >
-              {resultData.reflectionLines[2]}
-            </p>
-          </div>
-
           <p
             className="animate-fade-up delay-600"
             style={{ fontSize: "1.1rem", color: "var(--color-text)", lineHeight: 1.7 }}
@@ -376,191 +390,118 @@ export const ResultScreen: React.FC<ResultScreenProps> = ({
             })}
           </div>
 
-          {/* Primary dominant-pattern chip(s) */}
+          {/* ─ Section 1: The Path You Walked ─ */}
           <div
             className="animate-fade-up delay-400"
-            style={{ display: "flex", flexWrap: "wrap", gap: "0.5rem", marginBottom: "0.5rem" }}
-          >
-            {(isTied
-              ? tieDimensionData
-              : [{ dimension: finalDimension, chip: resultData.chip }]
-            ).map((item) => (
-              <span
-                key={item.dimension}
-                style={{
-                  fontSize: "0.95rem",
-                  border: "1px solid rgba(204,153,56,0.6)",
-                  borderRadius: "100px",
-                  padding: "0.28rem 0.85rem",
-                  color: "var(--color-text)",
-                  background: "rgba(251,229,184,0.15)"
-                }}
-              >
-                {item.chip}
-              </span>
-            ))}
-          </div>
-
-          {/* Secondary trait chips — smaller, lighter */}
-          <div
-            className="animate-fade-up delay-400"
-            style={{ display: "flex", flexWrap: "wrap", gap: "0.4rem", marginBottom: "1.4rem" }}
-          >
-            {resultData.secondaryChips.map((chip) => (
-              <span
-                key={chip}
-                style={{
-                  fontSize: "0.82rem",
-                  color: "var(--color-text-light)",
-                  border: "1px solid rgba(204,153,56,0.25)",
-                  borderRadius: "100px",
-                  padding: "0.18rem 0.6rem"
-                }}
-              >
-                {chip}
-              </span>
-            ))}
-          </div>
-
-          {/* Sliders — smaller labels to reduce visual noise */}
-          <div className="animate-fade-up delay-600" style={{ marginBottom: "0.5rem" }}>
-            {resultData.sliders.map((slider) => (
-              <div key={slider.title} style={{ marginBottom: "0.9rem" }}>
-                <p
-                  style={{
-                    fontSize: "0.84rem",
-                    color: "var(--color-text-light)",
-                    marginBottom: "0.3rem"
-                  }}
-                >
-                  {slider.title}
-                </p>
-                <div style={{ display: "flex", alignItems: "center" }}>
-                  <span
-                    style={{
-                      fontSize: "0.8rem",
-                      color: "var(--color-text)",
-                      flexShrink: 0
-                    }}
-                  >
-                    {slider.label1}
-                  </span>
-                  <div className="slider-track">
-                    <div
-                      style={{
-                        height: "100%",
-                        width: slidersVisible ? `${slider.value}%` : "0%",
-                        background: "var(--color-gold-mid)",
-                        borderRadius: "2px",
-                        transition: "width 0.9s cubic-bezier(0.2, 0.8, 0.2, 1)"
-                      }}
-                    />
-                  </div>
-                  <span
-                    style={{
-                      fontSize: "0.8rem",
-                      color: "var(--color-text)",
-                      flexShrink: 0
-                    }}
-                  >
-                    {slider.label2}
-                  </span>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          {/* ─ Zone B: The Closing — emotional peak, lots of breathing room ─ */}
-          <div
-            className="animate-fade-up delay-800"
             style={{
-              borderTop: "1px solid rgba(204,153,56,0.35)",
-              marginTop: "1.4rem",
-              paddingTop: "2.4rem",
-              textAlign: "center"
-            }}
-          >
-            <p
-              style={{
-                fontSize: "1.3rem",
-                lineHeight: 1.85,
-                color: "var(--color-text)",
-                maxWidth: "300px",
-                margin: "0 auto 2rem"
-              }}
-            >
-              The months ahead will amplify whatever direction you are already in.
-              <br />
-              <em>Is this the pattern you want running it?</em>
-            </p>
-
-            <div
-              className="animate-breathe-delayed"
-              style={{ fontSize: "2.2rem", color: "var(--color-text)" }}
-            >
-              {name.trim() || "Friend"}
-            </div>
-          </div>
-
-          {/* ─ Zone C: Sign-off — quiet, minimal ─ */}
-          <div
-            className="animate-fade-up delay-1000"
-            style={{
-              borderTop: "1px solid rgba(204,153,56,0.15)",
-              marginTop: "2rem",
-              paddingTop: "1.4rem",
-              textAlign: "center"
-            }}
-          >
-            <p
-              style={{
-                fontSize: "0.8rem",
-                color: "var(--color-text-light)",
-                marginBottom: "0.3rem"
-              }}
-            >
-              Now you have seen it.
-            </p>
-            <p
-              style={{
-                fontSize: "0.88rem",
-                letterSpacing: "4px",
-                color: "var(--color-text-light)"
-              }}
-            >
-              CAE GOH
-            </p>
-          </div>
-
-          <p
-            className="animate-fade-up delay-1200"
-            style={{
-              fontSize: "0.8rem",
-              color: "var(--color-text-light)",
-              textAlign: "center",
+              borderTop: "1px solid rgba(204,153,56,0.2)",
               marginTop: "1.2rem",
-              lineHeight: 1.7,
-              maxWidth: "270px",
-              alignSelf: "center"
+              paddingTop: "1.6rem"
             }}
           >
-            This game shows you the pattern. It cannot show you why it runs, or how the months ahead will change it.
-          </p>
+            <p
+              style={{
+                fontSize: "0.7rem",
+                letterSpacing: "3px",
+                textTransform: "uppercase",
+                color: "var(--color-text-light)",
+                marginBottom: "1.2rem"
+              }}
+            >
+              The Path You Walked
+            </p>
 
-          {/* Ending signal — no inline opacity; animation handles the reveal */}
-          <p
-            className="animate-fade-up delay-1800"
+            {/* Player's first move — echoed as a pull-quote before the analysis */}
+            {q1AnswerText.trim().length > 0 && (
+              <div className="narrative-quote" style={{ marginBottom: "1.1rem" }}>
+                <p className="narrative-quote__label">Your first move</p>
+                <p className="narrative-quote__text">&ldquo;{q1AnswerText}&rdquo;</p>
+              </div>
+            )}
+
+            {/* pathWalked[0] and [1] — pattern setup and consistency observation */}
+            <p style={{ fontSize: "1rem", lineHeight: 1.8, color: "var(--color-text)", marginBottom: "1rem" }}>
+              {interpolate(resultData.pathWalked[0], pathWalkedTokens)}
+            </p>
+            <p style={{ fontSize: "1rem", lineHeight: 1.8, color: "var(--color-text)", marginBottom: "1.1rem" }}>
+              {interpolate(resultData.pathWalked[1], pathWalkedTokens)}
+            </p>
+
+            {/* Player's named cost — echoed as a pull-quote before the shadow paragraph */}
+            {playerCostText.trim().length > 0 && (
+              <div className="narrative-quote" style={{ marginBottom: "1.1rem" }}>
+                <p className="narrative-quote__label">What it cost you</p>
+                <p className="narrative-quote__text">&ldquo;{playerCostText}&rdquo;</p>
+              </div>
+            )}
+
+            {/* pathWalked[2] — the shadow observation */}
+            <p style={{ fontSize: "1rem", lineHeight: 1.8, color: "var(--color-text)" }}>
+              {interpolate(resultData.pathWalked[2], pathWalkedTokens)}
+            </p>
+          </div>
+
+          {/* ─ Section 2: The Pattern You Rarely Used ─ */}
+          <div
+            className="animate-fade-up delay-600"
             style={{
-              fontSize: "0.7rem",
-              letterSpacing: "1.5px",
-              textAlign: "center",
-              color: "var(--color-text-light)",
-              marginTop: "0.8rem",
-              alignSelf: "center"
+              marginTop: "1.6rem",
+              display: "flex",
+              flexDirection: "column",
+              gap: "1rem"
             }}
           >
-            The speaker will continue from here.
-          </p>
+            {weakestDimensions.map((weakDimension) => {
+              const weakData = resultInterpretations[weakDimension];
+              return (
+                <div key={weakDimension} className="warning-box">
+                  <p className="warning-label">⚠ Blind Spot</p>
+                  <p
+                    style={{
+                      fontSize: "0.7rem",
+                      letterSpacing: "3px",
+                      textTransform: "uppercase",
+                      color: "var(--color-text-light)",
+                      marginBottom: "1.2rem"
+                    }}
+                  >
+                    The Pattern You Rarely Used
+                  </p>
+
+                  {/* weaknessNarrative[0] + [1] — count statement and short observation */}
+                  <p style={{ fontSize: "1rem", lineHeight: 1.8, color: "var(--color-text)", marginBottom: "0.9rem" }}>
+                    {interpolate(weakData.weaknessNarrative[0], weaknessTokens(weakDimension))}
+                  </p>
+                  <p style={{ fontSize: "1rem", lineHeight: 1.8, color: "var(--color-text)", marginBottom: "1.1rem" }}>
+                    {interpolate(weakData.weaknessNarrative[1], weaknessTokens(weakDimension))}
+                  </p>
+
+                  {/* Q9 — the cost they admit they cannot see — pulled out as a quote */}
+                  {q9AnswerText.trim().length > 0 && (
+                    <div className="narrative-quote narrative-quote--warning" style={{ marginBottom: "1.1rem" }}>
+                      <p className="narrative-quote__label narrative-quote__label--warning">
+                        The cost you notice least
+                      </p>
+                      <p className="narrative-quote__text">&ldquo;{q9AnswerText}&rdquo;</p>
+                    </div>
+                  )}
+
+                  {/* weaknessNarrative[2] — the closing question */}
+                  <p
+                    style={{
+                      fontSize: "1rem",
+                      lineHeight: 1.8,
+                      color: "var(--color-text)",
+                      fontStyle: "italic"
+                    }}
+                  >
+                    {interpolate(weakData.weaknessNarrative[2], weaknessTokens(weakDimension))}
+                  </p>
+                </div>
+              );
+            })}
+          </div>
+
         </div>
       )}
     </div>
