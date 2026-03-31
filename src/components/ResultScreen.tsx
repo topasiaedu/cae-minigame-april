@@ -38,7 +38,6 @@ export const ResultScreen: React.FC<ResultScreenProps> = ({
   answerCounts,
   q10AnswerText,
   q1AnswerText,
-  q8AnswerText,
   q9AnswerText,
   isTransitioning,
   onBack,
