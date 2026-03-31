@@ -1,19 +1,18 @@
 import React, { useState } from "react";
-import { User, Mail } from "lucide-react";
+import { User } from "lucide-react";
 
 interface LoginScreenProps {
-  onLogin: (name: string, email: string) => void;
+  onLogin: (name: string) => void;
   isTransitioning: boolean;
 }
 
 export const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin, isTransitioning }) => {
-  const [name, setName]   = useState("");
-  const [email, setEmail] = useState("");
+  const [name, setName] = useState("");
 
   const handleSubmit = (e: React.FormEvent): void => {
     e.preventDefault();
     if (name.trim()) {
-      onLogin(name.trim(), email.trim());
+      onLogin(name.trim());
     }
   };
 
@@ -30,9 +29,9 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin, isTransitioni
           className="animate-fade-up delay-200"
           style={{
             textAlign: "center",
-            fontSize: "2.4rem",
+            fontSize: "2.2rem",
             marginBottom: "2rem",
-            fontWeight: 400,
+            fontWeight: 600,
             opacity: 0
           }}
         >
@@ -43,17 +42,17 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin, isTransitioni
           className="animate-fade-up delay-400"
           style={{ marginBottom: "3rem", textAlign: "center", opacity: 0 }}
         >
-          <p style={{ marginBottom: "0.9rem", fontSize: "1.2rem", color: "var(--color-text)" }}>
+          <p style={{ marginBottom: "0.9rem", fontSize: "1.15rem", fontWeight: 500, color: "var(--color-text)" }}>
             The first three months are done.
           </p>
-          <p style={{ marginBottom: "0.9rem", fontSize: "1.1rem", color: "var(--color-text)" }}>
-            Before April begins — this will show you how you have been deciding.
+          <p style={{ marginBottom: "0.9rem", fontSize: "1.05rem", color: "var(--color-text)" }}>
+            Before April begins, this will show you how you have been deciding.
           </p>
-          <p style={{ marginBottom: "0.9rem", fontSize: "1rem", color: "var(--color-text)" }}>
+          <p style={{ marginBottom: "0.9rem", fontSize: "0.95rem", color: "var(--color-text-light)" }}>
             It takes about 8 minutes. There are no right answers.
           </p>
-          <p style={{ fontStyle: "italic", fontSize: "1rem", color: "var(--color-text)" }}>
-            As you answer, let your Q1 decisions come to mind.
+          <p style={{ fontStyle: "italic", fontSize: "0.95rem", color: "var(--color-text-light)" }}>
+            As you answer, let your first three months come to mind.
           </p>
         </div>
 
@@ -77,31 +76,6 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin, isTransitioni
             />
           </div>
 
-          {/* "Email" not "Gmail" — the audience includes Outlook, Yahoo, and
-              corporate domain users. Branding this as "Gmail" silently excludes them. */}
-          <div className="input-group">
-            <label htmlFor="login-email" className="sr-only">Email address (optional)</label>
-            <Mail className="input-icon" size={20} />
-            <input
-              id="login-email"
-              type="email"
-              className="input-field"
-              placeholder="Email (optional)"
-              aria-label="Email address (optional)"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-          </div>
-          <div style={{
-            fontSize: "1rem",
-            color: "var(--color-text-light)",
-            opacity: 0.9,
-            textAlign: "center",
-            marginTop: "-0.5rem",
-            marginBottom: "1.2rem"
-          }}>
-            So Cae can follow up after the session.
-          </div>
           <button type="submit" className="btn-primary" disabled={!name.trim()}>
             Begin
           </button>

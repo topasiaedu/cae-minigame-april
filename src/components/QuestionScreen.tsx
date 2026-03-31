@@ -224,10 +224,17 @@ export const QuestionScreen: React.FC<QuestionScreenProps> = ({
         <p
           className="animate-fade-up delay-400"
           style={{
-            fontSize: "1rem",
+            fontSize: "0.8rem",
+            fontWeight: 700,
+            letterSpacing: "2px",
+            textTransform: "uppercase",
             color: "var(--color-text)",
             textAlign: "center",
-            marginBottom: "0.75rem"
+            marginBottom: "0.75rem",
+            borderBottom: "2px solid var(--color-gold-mid)",
+            display: "inline-block",
+            alignSelf: "center",
+            paddingBottom: "2px"
           }}
         >
           Choose the one least like you
@@ -405,7 +412,7 @@ export const QuestionScreen: React.FC<QuestionScreenProps> = ({
               opacity: 0
             }}
           >
-            <div style={{ fontSize: "1.5rem", color: "var(--color-text)", fontWeight: 500 }}>
+            <div style={{ fontSize: "1.4rem", color: "var(--color-text)", fontWeight: 600 }}>
               {echoContent.primary}
             </div>
             <div style={{ fontSize: "1.05rem", color: "var(--color-text-light)", fontStyle: "italic", marginTop: "0.6rem" }}>

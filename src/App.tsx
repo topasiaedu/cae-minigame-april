@@ -6,6 +6,7 @@ import { ReflectionScreen } from "./components/ReflectionScreen";
 import { StageIntroScreen } from "./components/StageIntroScreen";
 import { ConfrontationScreen } from "./components/ConfrontationScreen";
 import { ResultScreen }     from "./components/ResultScreen";
+import { DemoFloat }        from "./components/DemoFloat";
 import { questions, Dimension, stageIBehaviorText, q4DescriptionText } from "./data/content";
 
 function App() {
@@ -172,8 +173,6 @@ function App() {
             answerCounts={gameState.answerCounts}
             q10AnswerText={gameState.q10AnswerText}
             q1AnswerText={gameState.q1AnswerText}
-            q8AnswerText={gameState.q8AnswerText}
-            q9AnswerText={gameState.q9AnswerText}
             isTransitioning={gameState.isTransitioning}
             onBack={gameState.goBack}
             playerCostText={gameState.playerCostText}
@@ -181,6 +180,9 @@ function App() {
         )}
 
       </main>
+
+      {/* Dev preview — floating button to inspect all 4 result screen types */}
+      <DemoFloat />
     </div>
   );
 }

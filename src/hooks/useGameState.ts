@@ -154,8 +154,8 @@ export function useGameState() {
     }, 600);
   };
 
-  const handleLogin = (name: string, email: string): void => {
-    setUser({ name, email });
+  const handleLogin = (name: string): void => {
+    setUser({ name, email: "" });
     handleTransition("stageIntro", 0, 1);
   };
 

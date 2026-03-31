@@ -36,7 +36,7 @@ const STAGE_COPY: Record<1 | 2, StageCopy> = {
     label: "STAGE II · THE AFTERMATH",
     watermark: "II",
     line1: "Now we look back.",
-    line2: "Not to judge your first three months — to see them clearly.",
+    line2: "Not to judge your first three months. To see them clearly.",
     cta: "Continue"
   }
 };
@@ -87,48 +87,49 @@ export const StageIntroScreen: React.FC<StageIntroScreenProps> = ({
           textAlign: "center",
           position: "relative",
           zIndex: 2,
-          paddingBottom: "2rem",
           maxWidth: "360px",
-          margin: "0 auto"
+          margin: "0 auto",
+          paddingBottom: "2rem"
         }}
       >
-        <div
+        {/* Stage label — the anchor that names the moment */}
+        <p
           className="animate-fade-up delay-200"
           style={{
-            fontSize: "1rem",
-            letterSpacing: "2px",
+            fontSize: "0.7rem",
+            letterSpacing: "3px",
             fontWeight: 600,
             color: "var(--color-gold-dark)",
+            textTransform: "uppercase",
             opacity: 0,
-            marginBottom: "2.5rem",
-            textTransform: "uppercase"
+            marginBottom: "2rem"
           }}
         >
           {copy.label}
-        </div>
+        </p>
 
+        {/* Primary statement */}
         <p
           className="animate-fade-up delay-400"
           style={{
-            fontSize: "1.2rem",
+            fontSize: "1.25rem",
+            fontWeight: 500,
             lineHeight: 1.7,
-            maxWidth: "300px",
-            margin: "0 auto 1.2rem",
             color: "var(--color-text)",
+            marginBottom: "1rem",
             opacity: 0
           }}
         >
           {copy.line1}
         </p>
 
+        {/* Supporting line */}
         <p
           className="animate-fade-up delay-600"
           style={{
-            fontSize: "1.2rem",
+            fontSize: "1rem",
             lineHeight: 1.7,
-            maxWidth: "300px",
-            margin: "0 auto",
-            color: "var(--color-text)",
+            color: "var(--color-text-light)",
             fontStyle: "italic",
             opacity: 0
           }}
@@ -136,13 +137,13 @@ export const StageIntroScreen: React.FC<StageIntroScreenProps> = ({
           {copy.line2}
         </p>
 
+        {/* CTA — always in DOM, fades in via animation class */}
         <div
           className="animate-fade-up delay-800"
           style={{
             marginTop: "auto",
             paddingTop: "4rem",
             width: "100%",
-            maxWidth: "360px",
             opacity: 0
           }}
         >

@@ -3,7 +3,7 @@ export type Dimension = "A" | "B" | "C" | "D";
 export interface BranchingSetup {
   /** 0-based index of the question whose answer determines which variant to show */
   branchesOn: number;
-  /** One setup string per dimension — keyed by the previous answer's dimension */
+  /** One setup string per dimension, keyed by the previous answer's dimension */
   variants: Record<Dimension, string>;
 }
 
@@ -32,9 +32,6 @@ export interface ResultInterpretation {
    * Two recognition/strength lines.
    * [0] = recognition sentence shown in Phase 1
    * [1] = strength sentence shown in Phase 2 (paragraph 1)
-   *
-   * The third shadow line that previously existed here has been moved into
-   * pathWalked[2] where it is expanded into a full paragraph.
    */
   reflectionLines: [string, string];
 
@@ -44,24 +41,15 @@ export interface ResultInterpretation {
    */
   q1CostLine: string;
 
-  /**
-   * Three paragraphs for Section 1 "The Path You Walked" in Phase 3.
-   * Uses {Q1}, {Q8}, {COST}, {COUNT} as interpolation tokens:
-   *   {Q1}    = player's Q1 answer text
-   *   {Q8}    = player's Q8 answer text
-   *   {COST}  = player's Q5 answer text (what the pattern cost them)
-   *   {COUNT} = number of scored questions where they chose this dimension
-   */
+  /** Three paragraphs for Section 1 "The Path You Walked" in Phase 3. */
   pathWalked: [string, string, string];
 
   /**
-   * Three paragraphs for Section 2 "The Pattern You Rarely Used" in Phase 3.
-   * Shown when THIS dimension is the player's weakest (lowest answerCount).
-   * Uses {Q9}, {COUNT} as interpolation tokens:
-   *   {Q9}    = player's Q9 answer text (cost they notice least)
-   *   {COUNT} = number of times they chose this dimension (may be 0)
+   * Three paragraphs for Section 2 "Blind Spot" in Phase 3.
+   * The shadow side of this dimension, shown when this IS the player's
+   * dominant pattern (highest answerCount). Based on CAE's shadow notes.
    */
-  weaknessNarrative: [string, string, string];
+  blindSpot: [string, string, string];
 }
 
 export const questions: Question[] = [
@@ -81,7 +69,7 @@ export const questions: Question[] = [
     setup: {
       branchesOn: 0,
       variants: {
-        A: "You moved first. Things are in motion — but a key detail surfaces that changes the picture. Something you would have caught with more time.",
+        A: "You moved first. Things are in motion, but a key detail surfaces that changes the picture. Something you would have caught with more time.",
         B: "You held back. The space is clearer now, but two others have moved in. Your team is asking why you are still watching.",
         C: "You ran the numbers. The data looks promising but not conclusive. A faster competitor has already launched while you were analysing.",
         D: "You positioned yourself without committing. Both paths are still open, but your team is not sure which way you are heading."
@@ -89,10 +77,10 @@ export const questions: Question[] = [
     },
     context: "What do you do now?",
     options: [
-      { id: "A", text: "Push forward — we will fix it as we go" },
+      { id: "A", text: "Push forward. We will fix it as we go" },
       { id: "B", text: "Pause and get clarity before the next move" },
       { id: "C", text: "Map out exactly what changed before deciding" },
-      { id: "D", text: "Keep room to adjust — do not lock in yet" }
+      { id: "D", text: "Keep room to adjust. Do not lock in yet" }
     ]
   },
   {
@@ -103,20 +91,20 @@ export const questions: Question[] = [
         A: "You pushed through again. A partner now needs your answer by end of day. You have about 70% of the information. This is your third fast call.",
         B: "You paused. The picture is sharper, but the deadline did not pause with you. A partner needs your answer by end of day. You have about 70%.",
         C: "You mapped it out. The analysis helped, but took time. A partner needs your answer by end of day. You have about 70%.",
-        D: "You kept room to adjust. Flexible — but a partner now needs a firm answer by end of day. You have about 70%."
+        D: "You kept room to adjust. Flexible, but a partner now needs a firm answer by end of day. You have about 70%."
       }
     },
     context: "What do you do?",
     options: [
-      { id: "A", text: "Decide now — 70% is enough" },
-      { id: "B", text: "Push the deadline — a wrong call is worse than a late one" },
+      { id: "A", text: "Decide now. 70% is enough" },
+      { id: "B", text: "Push the deadline. A wrong call is worse than a late one" },
       { id: "C", text: "Use what I have to work out the outcomes first" },
       { id: "D", text: "Give a soft answer I can adjust later" }
     ]
   },
   {
     id: 4,
-    setup: "Think of a real decision from the first three months of this year. Someone you know took the path you passed on — and it worked for them.",
+    setup: "Think of a real decision from the first three months of this year. Someone you know took the path you passed on, and it worked for them.",
     context: "Looking back, you:",
     options: [
       { id: "A", text: "Think I should have moved sooner" },
@@ -136,13 +124,13 @@ export const questions: Question[] = [
         D: "You see your own timing as valid. Flexibility matters to you. But every default has a price."
       }
     },
-    context: "In the first three months — what did your pattern cost you most?",
+    context: "In the first three months, what did your pattern cost you most?",
     isCostQuestion: true,
     options: [
-      { id: "A", text: "Relationships — people around me struggle to keep up or stay aligned" },
-      { id: "B", text: "Missed windows — some chances closed while I was still deciding" },
-      { id: "C", text: "Direction — I stay busy but not always heading the right way" },
-      { id: "D", text: "Energy — I keep running and it is starting to show" }
+      { id: "A", text: "Relationships. People around me struggle to keep up or stay aligned" },
+      { id: "B", text: "Missed windows. Some chances closed while I was still deciding" },
+      { id: "C", text: "Direction. I stay busy but not always heading the right way" },
+      { id: "D", text: "Energy. I keep running and it is starting to show" }
     ]
   },
   {
@@ -173,7 +161,7 @@ export const questions: Question[] = [
       { id: "A", text: "Try something different immediately" },
       { id: "B", text: "Step back and watch longer" },
       { id: "C", text: "Analyse what went wrong before changing anything" },
-      { id: "D", text: "Pull back — keep room to shift" }
+      { id: "D", text: "Pull back and keep room to shift" }
     ]
   },
   {
@@ -189,10 +177,10 @@ export const questions: Question[] = [
     },
     context: "The decisions that mattered most were probably made:",
     options: [
-      { id: "A", text: "Quickly — trusting instinct over data" },
-      { id: "B", text: "Slowly — waiting longer than I probably needed to" },
-      { id: "C", text: "Carefully — running the analysis until it felt safe enough" },
-      { id: "D", text: "Tentatively — committing just enough to stay flexible" }
+      { id: "A", text: "Quickly, trusting instinct over data" },
+      { id: "B", text: "Slowly, waiting longer than I probably needed to" },
+      { id: "C", text: "Carefully, running the analysis until it felt safe enough" },
+      { id: "D", text: "Tentatively, committing just enough to stay flexible" }
     ]
   },
   {
@@ -220,49 +208,49 @@ export const questions: Question[] = [
     setup: {
       branchesOn: 8,
       variants: {
-        A: "The cost you notice least — wasted motion — might be running right now.",
-        B: "The cost you notice least — closed windows — might already be happening.",
-        C: "The cost you notice least — unlaunched ideas — might be piling up.",
-        D: "The cost you notice least — nothing fully built — might be the story of this year."
+        A: "The cost you notice least, wasted motion, might be running right now.",
+        B: "The cost you notice least, closed windows, might already be happening.",
+        C: "The cost you notice least, unlaunched ideas, might be piling up.",
+        D: "The cost you notice least, nothing fully built, might be the story of this year."
       }
     },
     context: "The months ahead will amplify your pattern. If one thing needs to change, what is it?",
     options: [
-      { id: "A", text: "Am I moving fast because it is right — or because standing still feels uncomfortable?" },
-      { id: "B", text: "Am I waiting for certainty — or just avoiding the risk of being wrong?" },
-      { id: "C", text: "Am I planning carefully — or hiding behind the analysis?" },
-      { id: "D", text: "Am I staying flexible — or afraid to fully commit?" }
+      { id: "A", text: "Am I moving fast because it is right, or because standing still feels uncomfortable?" },
+      { id: "B", text: "Am I waiting for certainty, or just avoiding the risk of being wrong?" },
+      { id: "C", text: "Am I planning carefully, or hiding behind the analysis?" },
+      { id: "D", text: "Am I staying flexible, or afraid to fully commit?" }
     ]
   }
 ];
 
 export const reflectionObservations = {
   stage1: {
-    A: "Three decisions in one story. Each time — you moved first.",
-    B: "Three decisions in one story. Each time — you held back.",
-    C: "Three decisions in one story. Each time — you ran the numbers.",
-    D: "Three decisions in one story. Each time — you kept a way out."
+    A: "Three decisions in one story. Each time, you moved first.",
+    B: "Three decisions in one story. Each time, you held back.",
+    C: "Three decisions in one story. Each time, you ran the numbers.",
+    D: "Three decisions in one story. Each time, you kept a way out."
   },
   stage2: {
-    A: "Even in hindsight — you would still move first.",
-    B: "Even in hindsight — you would still wait.",
-    C: "Even in hindsight — you would still want the numbers.",
-    D: "Even in hindsight — you would still keep an exit open."
+    A: "Even in hindsight, you would still move first.",
+    B: "Even in hindsight, you would still wait.",
+    C: "Even in hindsight, you would still want the numbers.",
+    D: "Even in hindsight, you would still keep an exit open."
   }
 } as const;
 
 export const reflectionBalancedLines = {
   stage1: "Three situations. Three different responses.",
-  stage1Moderate: "Two out of three — the same instinct.",
-  stage2: "Looking back — no single pattern. But something drove each choice.",
-  stage2Moderate: "Even looking back — the same instinct shows up."
+  stage1Moderate: "Two out of three, the same instinct.",
+  stage2: "Looking back, no single pattern. But something drove each choice.",
+  stage2Moderate: "Even looking back, the same instinct shows up."
 } as const;
 
 export const reflectionFriction = {
   stage1Clear: "How many times did this happen in the first three months?",
-  stage1Balanced: "In the first three months — was it this mixed, or did one instinct take over?",
+  stage1Balanced: "In the first three months, was it this mixed, or did one instinct take over?",
   stage2Clear: "Is this the price you want to keep paying?",
-  stage2Balanced: "Even without a clear pattern — is the cost adding up?"
+  stage2Balanced: "Even without a clear pattern, is the cost adding up?"
 } as const;
 
 export const stageIBehaviorText: Record<Dimension, string> = {
@@ -286,16 +274,16 @@ export const resultInterpretations: Record<Dimension, ResultInterpretation> = {
       "You start before everything is clear.",
       "This keeps you in motion when others are still hesitating."
     ],
-    q1CostLine: "In the first three months — was some of that motion actually just noise?",
+    q1CostLine: "In the first three months, was some of that motion actually just noise?",
     pathWalked: [
       "Not because the picture was clear. Because waiting felt like falling behind.",
-      "{COUNT} out of 7 choices went the same way — moving before the fog lifted. You are the person who builds while others are still in the meeting.",
-      "But the pattern carries a quiet cost. Work-life balance does not collapse — it slips. A dinner half-attended. A conversation you were too far ahead to be present for. The drive that builds things is the same drive that makes the present invisible."
+      "Every time the pressure came, you chose movement. You are the person who builds while others are still in the meeting.",
+      "But the pattern carries a quiet cost. Work-life balance does not collapse. It slips. A dinner half-attended. A conversation you were too far ahead to be present for."
     ],
-    weaknessNarrative: [
-      "Early Movement showed up just {COUNT} out of 7 times. The impulse to move before everything was clear was the one you resisted most.",
-      "That resistance has protected you. But the cost of not starting is invisible — no trace, no record. Just a slightly smaller version of what could have existed.",
-      "Is there something you have been waiting to start that is already overdue?"
+    blindSpot: [
+      "The same drive that keeps you moving is the same one that exhausts you. Burnout does not arrive as a single event. It accumulates in the background while you are focused on what is next.",
+      "The people closest to you may have already adjusted to your absence. Not because they gave up, but because they learned you are always somewhere else.",
+      "You are always building the future. But you are never in the present."
     ]
   },
   B: {
@@ -304,16 +292,16 @@ export const resultInterpretations: Record<Dimension, ResultInterpretation> = {
       "You prefer to wait until the picture is clearer.",
       "This protects you from early, costly mistakes."
     ],
-    q1CostLine: "In the first three months — did some of that caution actually cost you a window?",
+    q1CostLine: "In the first three months, did some of that caution actually cost you a window?",
     pathWalked: [
-      "You needed the picture clearer before you moved. That is not hesitation — that is your standard.",
-      "{COUNT} out of 7 choices went the same way — holding back, waiting, protecting your position. You are the person who asks the question everyone else skipped.",
-      "But the goal has always been clear to you. The gap is the starting. Some windows close while you are still gathering certainty — and you know, if you are honest, which ones those were."
+      "You needed the picture clearer before you moved. That is not hesitation. That is your standard.",
+      "Every time the pressure came, you chose to wait. You are the person who asks the question everyone else skipped.",
+      "But the goal has always been clear to you. The gap is the starting. Some windows close while you are still gathering certainty."
     ],
-    weaknessNarrative: [
-      "Seeking Clarity showed up just {COUNT} out of 7 times. You rarely paused to gather more before acting.",
-      "Speed builds things. But it also creates cleanup. Some decisions made quickly may still be showing up in the results.",
-      "Is there a pattern from the first three months where going fast cost you something that only became visible later?"
+    blindSpot: [
+      "You want the end goal. But when it comes to actually putting in the effort, something always needs to be checked first. One more opinion. One more signal. One more reason to wait.",
+      "You have asked ten people for advice on decisions you already knew the answer to. Not because you needed their input, but because starting felt heavier than researching.",
+      "The pattern is not caution. It is avoidance dressed as wisdom."
     ]
   },
   C: {
@@ -322,16 +310,16 @@ export const resultInterpretations: Record<Dimension, ResultInterpretation> = {
       "You measure before you move.",
       "This keeps you from wasting energy on things that do not add up."
     ],
-    q1CostLine: "In the first three months — did some of that planning actually stop something from starting?",
+    q1CostLine: "In the first three months, did some of that planning actually stop something from starting?",
     pathWalked: [
       "Precision before movement. Logic before commitment. That was your first answer, and it echoed.",
-      "{COUNT} out of 7 choices went the same way — mapping the risk first, protecting the downside. You do not waste resources on things that do not add up.",
-      "But the pattern has a blind spot that always looks like thoroughness. Opportunities were not lost to bad luck — they were reviewed to death. Perfectionism does not feel like fear. It feels like standards."
+      "Every time the pressure came, you chose precision. You do not waste resources on things that do not add up.",
+      "But the pattern has a blind spot that always looks like thoroughness. Opportunities were not lost to bad luck. They were reviewed to death."
     ],
-    weaknessNarrative: [
-      "Calculated Risk showed up just {COUNT} out of 7 times. The analytical, detail-first mode was the one you used least.",
-      "You tend to trust feel over formula. In the right moments, that is an asset. But some decisions may have been made without a full accounting of what they would actually cost.",
-      "What is one decision from the first three months where the numbers mattered more than you gave them credit for?"
+    blindSpot: [
+      "You over-plan. You over-calculate. You treat every partnership, every opportunity, every risk as a spreadsheet problem. And by the time the numbers look right, the window has closed.",
+      "Perfectionism has cost you more than imperfection ever could. The deals you did not take, the partnerships you analysed to death, the ideas you refined until they were no longer relevant.",
+      "You see every detail. But you have lost the big picture."
     ]
   },
   D: {
@@ -340,16 +328,16 @@ export const resultInterpretations: Record<Dimension, ResultInterpretation> = {
       "You protect your freedom to change direction.",
       "This keeps you from being trapped by choices that no longer fit."
     ],
-    q1CostLine: "In the first three months — did some of that flexibility actually prevent you from building?",
+    q1CostLine: "In the first three months, did some of that flexibility actually prevent you from building?",
     pathWalked: [
       "Keep the exits open. Stay in the room without fully belonging to it. That was your first instinct, and it stayed.",
-      "{COUNT} out of 7 choices went the same way — staying flexible, keeping room to shift. You read the room faster than most.",
-      "But the pattern is easily pulled. The next opportunity catches your eye before the current one is finished. Nothing gets fully built when everything stays tentative. The freedom you protect may already be costing you the depth you want."
+      "Every time the pressure came, you chose flexibility. You read the room faster than most.",
+      "But the pattern is easily pulled. The next opportunity catches your eye before the current one is finished. Nothing gets fully built when everything stays tentative."
     ],
-    weaknessNarrative: [
-      "Preserving Options showed up just {COUNT} out of 7 times. Flexibility — keeping exits open, avoiding lock-in — was the pattern you used least.",
-      "You tend to commit fully. That builds depth. But full commitment also means carrying things longer than you should — out of identity rather than wisdom.",
-      "Is there something you are still holding that you should have put down by now?"
+    blindSpot: [
+      "You are easily distracted. Easily influenced. When someone else succeeds at something, you suddenly want to do that too. Not because it fits your path, but because it looked good from the outside.",
+      "You want to show the best version of yourself to everyone. But that performance takes energy away from the actual work. The details slip. The depth never comes.",
+      "From the outside, your life looks full. From the inside, you know it is scattered."
     ]
   }
 };

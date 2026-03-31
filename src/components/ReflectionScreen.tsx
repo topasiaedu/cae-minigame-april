@@ -68,7 +68,7 @@ export const ReflectionScreen: React.FC<ReflectionScreenProps> = ({
     if (hasContradiction) {
       const q4Answer = stageAnswers[0];
       if (q4Answer !== undefined) {
-        return `In the first story, you ${stageIBehaviorText[stageIDominant]} every time. But looking back — you said ${q4DescriptionText[q4Answer]}.`;
+        return `In the first story, you ${stageIBehaviorText[stageIDominant]} every time. But looking back, you said ${q4DescriptionText[q4Answer]}.`;
       }
     }
     if (dominantCount === 3) return reflectionObservations.stage2[dominantDimension];
@@ -137,104 +137,78 @@ export const ReflectionScreen: React.FC<ReflectionScreenProps> = ({
           flex: 1,
           display: "flex",
           flexDirection: "column",
-          justifyContent: "center",
-          alignItems: "center",
-          textAlign: "center",
+          gap: "1.2rem",
           position: "relative",
           zIndex: 2
         }}
       >
-        {stageAnswerTexts.map((text, answerIndex) => {
-          if (text.trim().length === 0) return null;
-          const delayClass = answerIndex === 0 ? "delay-200" : answerIndex === 1 ? "delay-400" : "delay-600";
-          return (
-            <div
-              key={answerIndex}
-              className={`animate-fade-up ${delayClass}`}
-              style={{
-                borderLeft: "2px solid var(--color-gold-mid)",
-                paddingLeft: "1rem",
-                marginBottom: "0.75rem",
-                textAlign: "left",
-                maxWidth: "320px",
-                width: "100%"
-              }}
-            >
-              <p style={{
-                fontSize: "1.05rem",
-                color: "var(--color-text)",
-                fontStyle: "italic",
-                lineHeight: 1.6,
-                margin: 0
-              }}>
-                {text}
-              </p>
-            </div>
-          );
-        })}
+        {/* Single card: all connected content — player's choices + observation + cost */}
+        <div className="phase3-card animate-fade-up delay-200">
+          <p className="phase3-overline">What you chose</p>
 
+          {stageAnswerTexts.map((text, answerIndex) => {
+            if (text.trim().length === 0) return null;
+            return (
+              <React.Fragment key={answerIndex}>
+                {answerIndex > 0 && <div className="phase3-divider" />}
+                <p style={{ fontSize: "0.97rem", fontStyle: "italic", lineHeight: 1.7, color: "var(--color-text)" }}>
+                  &ldquo;{text}&rdquo;
+                </p>
+              </React.Fragment>
+            );
+          })}
+
+          <div className="phase3-divider" />
+
+          <p style={{ fontSize: "1.05rem", fontWeight: 500, lineHeight: 1.75, color: "var(--color-text)" }}>
+            {observationText}
+          </p>
+
+          {triggerBlock === 2 && playerCostText.trim().length > 0 && (
+            <>
+              <div className="phase3-divider" />
+              <p className="phase3-overline">You said this costs you</p>
+              <p style={{ fontSize: "0.97rem", fontStyle: "italic", lineHeight: 1.7, color: "var(--color-text)" }}>
+                &ldquo;{playerCostText}&rdquo;
+              </p>
+            </>
+          )}
+        </div>
+
+        {/* Friction line — bare floating text, no card border; it's a late reveal, not a new section */}
         <p
-          className="animate-fade-up delay-800"
           style={{
-            fontSize: "1.2rem",
+            fontSize: "1.02rem",
+            fontWeight: 500,
+            fontStyle: "italic",
             lineHeight: 1.7,
-            maxWidth: "320px",
-            margin: "0.8rem auto 0",
-            color: "var(--color-text)"
+            color: "var(--color-text-light)",
+            textAlign: "center",
+            padding: "0 0.5rem",
+            opacity: showFriction ? 1 : 0,
+            transition: "opacity 0.6s ease"
           }}
         >
-          {observationText}
+          {frictionText}
         </p>
 
-        {triggerBlock === 2 && playerCostText.trim().length > 0 && (
-          <div
-            className="animate-fade-up delay-1000"
-            style={{
-              borderLeft: "3px solid var(--color-gold-dark)",
-              paddingLeft: "1rem",
-              marginTop: "1.2rem",
-              maxWidth: "320px"
-            }}
-          >
-            <p style={{ fontSize: "0.9rem", color: "var(--color-text-light)", marginBottom: "0.3rem" }}>
-              You said this costs you:
-            </p>
-            <p style={{ fontSize: "1.05rem", color: "var(--color-text)", fontStyle: "italic", lineHeight: 1.6, margin: 0 }}>
-              {playerCostText}
-            </p>
-          </div>
-        )}
-
-        {showFriction && (
-          <p
-            className="animate-fade-up"
-            style={{
-              fontSize: "1.1rem",
-              color: "var(--color-text)",
-              marginTop: "1.5rem",
-              textAlign: "center"
-            }}
-          >
-            {frictionText}
-          </p>
-        )}
-
-        {showButton && (
-          <div
-            className="animate-fade-up"
-            style={{
-              marginTop: "auto",
-              paddingTop: "3rem",
-              width: "100%",
-              maxWidth: "360px",
-              paddingBottom: "2rem"
-            }}
-          >
-            <button className="btn-primary" onClick={onProceed}>
-              {ctaText}
-            </button>
-          </div>
-        )}
+        {/* CTA — always in DOM, invisible until timer fires, never pushes layout */}
+        <div
+          style={{
+            marginTop: "auto",
+            paddingTop: "1rem",
+            width: "100%",
+            maxWidth: "360px",
+            alignSelf: "center",
+            opacity: showButton ? 1 : 0,
+            pointerEvents: showButton ? "auto" : "none",
+            transition: "opacity 0.5s ease"
+          }}
+        >
+          <button className="btn-primary" onClick={onProceed}>
+            {ctaText}
+          </button>
+        </div>
       </div>
     </div>
   );

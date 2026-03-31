@@ -66,30 +66,39 @@ export const ConfrontationScreen: React.FC<ConfrontationScreenProps> = ({
           zIndex: 2
         }}
       >
-        <p className="animate-fade-up delay-200" style={{ fontSize: "1.5rem", color: "var(--color-text)", marginBottom: "1.5rem" }}>
+        <p className="animate-fade-up delay-200" style={{ fontSize: "1.4rem", fontWeight: 600, color: "var(--color-text)", marginBottom: "1.5rem" }}>
           You have been making the same call.
         </p>
-        <p className="animate-fade-up delay-400" style={{ fontSize: "1.2rem", color: "var(--color-text)", marginBottom: "1.5rem" }}>
+        <p className="animate-fade-up delay-400" style={{ fontSize: "1.1rem", color: "var(--color-text)", lineHeight: 1.7, marginBottom: "1.5rem" }}>
           {hasContradiction && q4DescriptionText.length > 0
-            ? `In the first story, you ${stageIBehaviorText}. But looking back at a real moment — you said ${q4DescriptionText}.`
-            : "In the first story and in hindsight — the same instinct."}
+            ? `In the first story, you ${stageIBehaviorText}. But looking back at a real moment, you said ${q4DescriptionText}.`
+            : "In the first story and in hindsight, the same instinct."}
         </p>
         {playerCostText.trim().length > 0 && (
-          <p className="animate-fade-up delay-600" style={{ fontSize: "1.1rem", color: "var(--color-text)", marginBottom: "1.5rem" }}>
+          <p className="animate-fade-up delay-600" style={{ fontSize: "1.05rem", fontWeight: 500, color: "var(--color-text)", marginBottom: "1.5rem" }}>
             And you already named what it costs you.
           </p>
         )}
-        <p className="animate-fade-up delay-800" style={{ fontSize: "1.1rem", color: "var(--color-text)", fontStyle: "italic", maxWidth: "320px" }}>
+        <p className="animate-fade-up delay-800" style={{ fontSize: "1rem", color: "var(--color-text-light)", fontStyle: "italic", maxWidth: "320px", lineHeight: 1.7 }}>
           The next questions are not about what might happen. They are about what is already running.
         </p>
 
-        {showButton && (
-          <div className="animate-fade-up" style={{ marginTop: "auto", width: "100%", maxWidth: "360px", paddingTop: "3rem" }}>
-            <button className="btn-primary" onClick={onProceed}>
-              I&apos;m ready
-            </button>
-          </div>
-        )}
+        {/* Always in DOM — opacity controls visibility so layout never shifts */}
+        <div
+          style={{
+            marginTop: "auto",
+            width: "100%",
+            maxWidth: "360px",
+            paddingTop: "3rem",
+            opacity: showButton ? 1 : 0,
+            pointerEvents: showButton ? "auto" : "none",
+            transition: "opacity 0.5s ease"
+          }}
+        >
+          <button className="btn-primary" onClick={onProceed}>
+            I&apos;m ready
+          </button>
+        </div>
       </div>
     </div>
   );

@@ -1,12 +1,8 @@
-/** Load Cormorant Garamond — a high-end editorial serif that carries
- *  the "serene luxury" tone described in the design system doc.
- *  Outfit (the previous font) was a geometric sans-serif — wrong register entirely.
- */
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
 
 :root {
   /* Typography */
-  --font-main: 'Cormorant Garamond', Georgia, serif;
+  --font-main: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 
   /* Colour system */
   --color-text:       #2c251d;
@@ -35,12 +31,7 @@ body, html {
   overflow-x: hidden;
   width: 100%;
   height: 100%;
-  /**
-   * 18px base — Cormorant Garamond reads slightly smaller than sans-serif
-   * at the same nominal size. This compensates for the optical size difference
-   * and keeps the copy readable for the 40–65 target audience.
-   */
-  font-size: 18px;
+  font-size: 16px;
 }
 
 /* Base App Container — warm gradient fallback ensures glassmorphism
@@ -67,6 +58,7 @@ body, html {
   background: transparent;
   display: flex;
   flex-direction: column;
+  position: relative;
 }
 
 /* Elevated Glass Card */
@@ -79,8 +71,8 @@ body, html {
   margin-bottom: 2rem;
 }
 
-/* Typography defaults */
-h1, h2, h3, h4 { font-weight: 500; line-height: 1.3; margin-bottom: 1rem; }
+/* Typography defaults — Inter needs explicit weight differentiation */
+h1, h2, h3, h4 { font-weight: 600; line-height: 1.3; margin-bottom: 1rem; }
 p { line-height: 1.65; color: var(--color-text-light); }
 
 /* Primary Button */
@@ -356,7 +348,7 @@ button:focus-visible {
 }
 
 .result-curtain {
-  position: fixed;
+  position: absolute;
   top: 0;
   left: 0;
   right: 0;
@@ -427,7 +419,8 @@ button:focus-visible {
 }
 
 .distribution-label {
-  font-size: 1rem;
+  font-size: 0.9rem;
+  font-weight: 500;
   color: var(--color-text);
 }
 
@@ -446,70 +439,86 @@ button:focus-visible {
 }
 
 .distribution-count {
-  font-size: 1rem;
-  color: var(--color-text);
+  font-size: 0.85rem;
+  color: var(--color-text-light);
 }
 
-/* ── Warning box — Section 2 "The Pattern You Rarely Used" ── */
-.warning-box {
-  background: rgba(180, 50, 30, 0.06);
-  border: 1px solid rgba(180, 50, 30, 0.3);
-  border-radius: 16px;
-  padding: 1.4rem 1.2rem;
+/* ── Phase 3 Card System ─────────────────────────────────────────────── */
+
+.phase3-card {
+  background: linear-gradient(165deg, rgba(255,255,255,0.94) 0%, rgba(255,255,255,0.80) 100%);
+  border: 1px solid rgba(255,255,255,0.85);
+  border-radius: 20px;
+  padding: 1.6rem 1.4rem;
+  box-shadow: 0 2px 20px rgba(0,0,0,0.03);
 }
 
-.warning-label {
-  font-size: 0.7rem;
-  letter-spacing: 2.5px;
-  text-transform: uppercase;
-  color: rgba(180, 50, 30, 0.85);
-  margin-bottom: 0.8rem;
-  font-family: 'Cormorant Garamond', serif;
-}
-
-/* ── Narrative pull-quotes — player's own words, visually separated ── */
-
-/**
- * Gold-tinted pull-quote block used in Section 1 "The Path You Walked".
- * Used to echo back Q1 (first move) and Q5 (named cost) in the player's
- * own words, creating visual rhythm between prose paragraphs.
- */
-.narrative-quote {
-  border-left: 2px solid rgba(204, 153, 56, 0.5);
-  padding-left: 1rem;
-  background: rgba(251, 229, 184, 0.08);
-  border-radius: 0 8px 8px 0;
-  padding-top: 0.6rem;
-  padding-bottom: 0.6rem;
-  padding-right: 0.8rem;
-}
-
-.narrative-quote__label {
-  font-size: 0.68rem;
-  letter-spacing: 1.8px;
+/** Small uppercase overline used as a section category marker. */
+.phase3-overline {
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 3px;
   text-transform: uppercase;
   color: var(--color-text-light);
-  margin-bottom: 0.35rem;
-  font-family: 'Cormorant Garamond', serif;
+  opacity: 0.7;
+  margin-bottom: 0.6rem;
 }
 
-.narrative-quote__text {
-  font-size: 1.05rem;
-  font-style: italic;
+/* Card variants removed — all cards share the same white frosted surface.
+   Content differentiation is handled by typography (color, size, weight). */
+
+/** Body paragraph for Phase 3 cards. */
+.phase3-body {
+  font-size: 0.93rem;
+  line-height: 1.8;
   color: var(--color-text);
-  line-height: 1.65;
-  font-family: 'Cormorant Garamond', serif;
 }
 
 /**
- * Warning-tinted variant of the pull-quote used inside the blind-spot box
- * to echo back the Q9 answer (cost the player notices least in themselves).
+ * Player's own words, displayed inline as hero text. No boxes, no borders.
+ * The size and colour difference is enough to separate them from prose.
  */
-.narrative-quote--warning {
-  border-left-color: rgba(180, 50, 30, 0.4);
-  background: rgba(180, 50, 30, 0.05);
+.phase3-echo {
+  font-size: 1.15rem;
+  font-weight: 500;
+  line-height: 1.55;
+  color: var(--color-gold-dark);
+  padding: 0.8rem 0;
 }
 
-.narrative-quote__label--warning {
-  color: rgba(180, 50, 30, 0.75);
+/** Bold closing line inside the path card. Slightly larger to land as a takeaway. */
+.phase3-takeaway {
+  font-size: 1.02rem;
+  font-weight: 500;
+  line-height: 1.7;
+  color: var(--color-text);
 }
+
+/** Blind-spot section heading. Large enough to command, not shout. */
+.phase3-warning-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  line-height: 1.4;
+  color: rgba(160, 45, 25, 0.9);
+  margin-bottom: 1.2rem;
+}
+
+/** The emotional closer inside the blind-spot card. Largest text in Phase 3. */
+.phase3-closer {
+  font-size: 1.15rem;
+  font-weight: 600;
+  line-height: 1.5;
+  color: var(--color-text);
+  padding-top: 1rem;
+  margin-top: 0.6rem;
+  border-top: 1px solid rgba(180, 50, 30, 0.1);
+}
+
+/** Thin horizontal divider inside Phase 3 cards. */
+.phase3-divider {
+  height: 1px;
+  background: rgba(0,0,0,0.05);
+  margin: 1rem 0;
+}
+
+/* (narrative-quote classes removed; replaced by phase3-echo inline hero text) */
