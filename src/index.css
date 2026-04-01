@@ -442,6 +442,42 @@ button:focus-visible {
   box-shadow: 0 2px 20px rgba(0,0,0,0.03);
 }
 
+.phase3-card-portrait {
+  border-left: 3px solid rgba(170, 160, 145, 0.45);
+  background: linear-gradient(165deg, rgba(255,255,255,0.95) 0%, rgba(248,247,245,0.88) 100%);
+}
+
+.phase3-card-path {
+  border-left: 3px solid rgba(184, 132, 42, 0.42);
+  background: linear-gradient(165deg, rgba(255,255,255,0.95) 0%, rgba(255,246,227,0.80) 100%);
+}
+
+.phase3-card-missed {
+  border-left: 3px solid rgba(160, 39, 16, 0.35);
+  background: linear-gradient(165deg, rgba(255,255,255,0.95) 0%, rgba(255,240,236,0.82) 100%);
+}
+
+.phase3-card-final {
+  border-left: 3px solid rgba(61, 46, 30, 0.3);
+  background: linear-gradient(165deg, rgba(255,255,255,0.95) 0%, rgba(247,243,238,0.84) 100%);
+}
+
+/** Inline header row used to establish reading sequence. */
+.phase3-section-head {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+}
+
+/** Numeric marker for section sequence (01, 02, 03...). */
+.phase3-step {
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 1px;
+  color: rgba(0, 0, 0, 0.35);
+  min-width: 1.25rem;
+}
+
 /** Small uppercase overline used as a section category marker. */
 .phase3-overline {
   font-size: 0.65rem;
@@ -453,14 +489,20 @@ button:focus-visible {
   margin-bottom: 0.6rem;
 }
 
+/** Peak section: consequence should feel like the emotional center. */
+.phase3-card-peak {
+  border-color: rgba(224, 85, 51, 0.15);
+}
+
 /* Card variants removed — all cards share the same white frosted surface.
    Content differentiation is handled by typography (color, size, weight). */
 
 /** Body paragraph for Phase 3 cards. */
 .phase3-body {
-  font-size: 0.93rem;
-  line-height: 1.8;
+  font-size: 0.95rem;
+  line-height: 1.86;
   color: var(--color-text);
+  max-width: 38ch;
 }
 
 /**
@@ -470,10 +512,10 @@ button:focus-visible {
  */
 .phase3-echo {
   font-size: 1.15rem;
-  font-weight: 500;
+  font-weight: 600;
   line-height: 1.55;
   padding: 0.8rem 0;
-  background: linear-gradient(to right, #e8b84b 0%, #b8842a 100%);
+  background: linear-gradient(to right, #9a6a1f 0%, #e5b446 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -492,10 +534,10 @@ button:focus-visible {
  * Deep terracotta-to-rust gradient — signals urgency without screaming.
  */
 .phase3-warning-title {
-  font-size: 1.1rem;
+  font-size: 1.2rem;
   font-weight: 600;
-  line-height: 1.4;
-  margin-bottom: 1.2rem;
+  line-height: 1.5;
+  margin-bottom: 1rem;
   background: linear-gradient(to right, #e05533 0%, #9b2710 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -524,6 +566,14 @@ button:focus-visible {
   height: 1px;
   background: rgba(0,0,0,0.05);
   margin: 1rem 0;
+}
+
+/** Closing section paragraph should read as calm resolution. */
+.phase3-body-final {
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+  padding-top: 0.9rem;
+  margin-top: 0.3rem;
+  max-width: 36ch;
 }
 
 /* (narrative-quote classes removed; replaced by phase3-echo inline hero text) */

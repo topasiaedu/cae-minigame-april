@@ -9,7 +9,6 @@ interface ResultScreenProps {
   tiedDimensions: Dimension[];
   answerCounts: Record<Dimension, number>;
   q10AnswerText: string;
-  q1AnswerText: string;
   isTransitioning: boolean;
   onBack: () => void;
   /** Player's Q5 cost answer text */
@@ -23,7 +22,6 @@ export const ResultScreen: React.FC<ResultScreenProps> = ({
   tiedDimensions,
   answerCounts,
   q10AnswerText,
-  q1AnswerText,
   isTransitioning,
   onBack,
   playerCostText
@@ -220,7 +218,7 @@ export const ResultScreen: React.FC<ResultScreenProps> = ({
 
       {/* ── Phase 3: Portrait + Urgency ───────────────────────────────────── */}
       {phase === 3 && (
-        <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: "1.2rem" }}>
+        <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: "1.5rem" }}>
 
           {/* Print-only header — name + pattern shown at top of exported PDF */}
           <div className="print-only-header">
@@ -236,8 +234,11 @@ export const ResultScreen: React.FC<ResultScreenProps> = ({
           </div>
 
           {/* ─ Card 1: Decision Portrait ─ */}
-          <div className="phase3-card animate-fade-up">
-            <p className="phase3-overline">Your Decision Portrait</p>
+          <div className="phase3-card phase3-card-portrait animate-fade-up">
+            <div className="phase3-section-head">
+              <span className="phase3-step">01</span>
+              <p className="phase3-overline">Your Decision Portrait</p>
+            </div>
 
             <div style={{ display: "flex", flexDirection: "column", gap: "1.6rem" }}>
               {distributionOrder.map((dimension) => {
@@ -277,53 +278,47 @@ export const ResultScreen: React.FC<ResultScreenProps> = ({
             </div>
           </div>
 
-          {/* ─ Card 2: The Path You Walked (full narrative arc) ─ */}
-          <div className="phase3-card animate-fade-up delay-200">
-            <p className="phase3-overline">The Path You Walked</p>
-
-            {q1AnswerText.trim().length > 0 && (
-              <p className="phase3-echo" style={{ marginBottom: "0.75rem" }}>&ldquo;{q1AnswerText}&rdquo;</p>
-            )}
-
-            <p className="phase3-body">
-              {resultData.pathWalked[0]}
+          {/* ─ Card 2: The Path You Chose ─ */}
+          <div className="phase3-card phase3-card-path animate-fade-up delay-200">
+            <div className="phase3-section-head">
+              <span className="phase3-step">02</span>
+              <p className="phase3-overline">The Path You Chose</p>
+            </div>
+            <p className="phase3-echo" style={{ marginBottom: "0.75rem" }}>
+              &ldquo;{resultData.decisionProfile.pathYouChose.quote}&rdquo;
             </p>
 
-            <div className="phase3-divider" />
-
-            {playerCostText.trim().length > 0 && (
-              <p className="phase3-echo" style={{ marginBottom: "0.75rem" }}>&ldquo;{playerCostText}&rdquo;</p>
-            )}
-
             <p className="phase3-body">
-              {resultData.pathWalked[1]}
-            </p>
-
-            <div className="phase3-divider" />
-
-            <p className="phase3-takeaway">
-              {resultData.pathWalked[2]}
+              {resultData.decisionProfile.pathYouChose.body}
             </p>
           </div>
 
-          {/* ─ Card 5: Blind Spot ─ */}
-          <div className="phase3-card animate-fade-up delay-600">
+          {/* ─ Card 3: What You Actually Missed ─ */}
+          <div className="phase3-card phase3-card-missed phase3-card-peak animate-fade-up delay-600" style={{ marginTop: "0.6rem" }}>
+            <div className="phase3-section-head">
+              <span className="phase3-step">03</span>
+              <p className="phase3-overline">What You Actually Missed</p>
+            </div>
             <p className="phase3-warning-title">
-              A blind spot you might have missed.
+              &ldquo;{resultData.decisionProfile.whatYouActuallyMissed.quote}&rdquo;
             </p>
 
-            <p className="phase3-body">
-              {resultData.blindSpot[0]}
-            </p>
+            {resultData.decisionProfile.whatYouActuallyMissed.paragraphs.map((paragraph, index) => (
+              <React.Fragment key={index}>
+                {index > 0 && <div className="phase3-divider" />}
+                <p className="phase3-body">{paragraph}</p>
+              </React.Fragment>
+            ))}
+          </div>
 
-            <div className="phase3-divider" />
-
-            <p className="phase3-body">
-              {resultData.blindSpot[1]}
-            </p>
-
-            <p className="phase3-closer">
-              {resultData.blindSpot[2]}
+          {/* ─ Card 4: Final Thoughts ─ */}
+          <div className="phase3-card phase3-card-final animate-fade-up delay-800">
+            <div className="phase3-section-head">
+              <span className="phase3-step">04</span>
+              <p className="phase3-overline">Final Thoughts</p>
+            </div>
+            <p className="phase3-body phase3-body-final">
+              {resultData.decisionProfile.finalThoughts}
             </p>
           </div>
 

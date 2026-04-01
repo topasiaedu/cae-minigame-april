@@ -171,7 +171,6 @@ function App() {
             tiedDimensions={gameState.tiedDimensions}
             answerCounts={gameState.answerCounts}
             q10AnswerText={gameState.q10AnswerText}
-            q1AnswerText={gameState.q1AnswerText}
             isTransitioning={gameState.isTransitioning}
             onBack={gameState.goBack}
             playerCostText={gameState.playerCostText}

@@ -41,15 +41,18 @@ export interface ResultInterpretation {
    */
   q1CostLine: string;
 
-  /** Three paragraphs for Section 1 "The Path You Walked" in Phase 3. */
-  pathWalked: [string, string, string];
-
-  /**
-   * Three paragraphs for Section 2 "Blind Spot" in Phase 3.
-   * The shadow side of this dimension, shown when this IS the player's
-   * dominant pattern (highest answerCount). Based on CAE's shadow notes.
-   */
-  blindSpot: [string, string, string];
+  /** Full decision profile shown in Phase 3 after distribution bars. */
+  decisionProfile: {
+    pathYouChose: {
+      quote: string;
+      body: string;
+    };
+    whatYouActuallyMissed: {
+      quote: string;
+      paragraphs: string[];
+    };
+    finalThoughts: string;
+  };
 }
 
 export const questions: Question[] = [
@@ -275,16 +278,20 @@ export const resultInterpretations: Record<Dimension, ResultInterpretation> = {
       "This keeps you in motion when others are still hesitating."
     ],
     q1CostLine: "In the first three months, was some of that motion actually just noise?",
-    pathWalked: [
-      "Not because the picture was clear. Because waiting felt like falling behind.",
-      "Every time the pressure came, you chose movement. You are the person who builds while others are still in the meeting.",
-      "But the pattern carries a quiet cost. Work-life balance does not collapse. It slips. A dinner half-attended. A conversation you were too far ahead to be present for."
-    ],
-    blindSpot: [
-      "The same drive that keeps you moving is the same one that exhausts you. Burnout does not arrive as a single event. It accumulates in the background while you are focused on what is next.",
-      "The people closest to you may have already adjusted to your absence. Not because they gave up, but because they learned you are always somewhere else.",
-      "You are always building the future. But you are never in the present."
-    ]
+    decisionProfile: {
+      pathYouChose: {
+        quote: "Act quickly or risk falling behind.",
+        body: "You dive into projects without waiting. While your eagerness to act seems like a strength, it can lead to rushed decisions and missed opportunities."
+      },
+      whatYouActuallyMissed: {
+        quote: "You're always moving forward, but what about today?",
+        paragraphs: [
+          "You feel the pressure of FOMO (Fear of Missing Out) and constantly chase the next big thing. Think about the times you've jumped into a new project without a clear plan, only to realize later that you were too busy to notice your relationships fading. You might have missed out on family gatherings because you were glued to your work, believing that your hard work would pay off.",
+          "You push yourself to achieve more but end up feeling exhausted and alone. Your drive can lead to burnout, where you wake up one day realizing that you've sacrificed precious time with loved ones and important moments in life. Imagine the regret of looking back and realizing you missed unforgettable experiences because you were always focused on the next task."
+        ]
+      },
+      finalThoughts: "Imagine having insights from your Zi Wei chart to identify your risky zones. Understanding where to focus your energy in 2026 can help you hustle smartly, avoiding costly mistakes while allowing you to build a fulfilling life. With the Design Your Destiny Program, you'll learn to recognize the right moments to act, ensuring you achieve your goals without sacrificing your relationships or well-being."
+    }
   },
   B: {
     chip: "Seeking Clarity",
@@ -293,16 +300,21 @@ export const resultInterpretations: Record<Dimension, ResultInterpretation> = {
       "This protects you from early, costly mistakes."
     ],
     q1CostLine: "In the first three months, did some of that caution actually cost you a window?",
-    pathWalked: [
-      "You needed the picture clearer before you moved. That is not hesitation. That is your standard.",
-      "Every time the pressure came, you chose to wait. You are the person who asks the question everyone else skipped.",
-      "But the goal has always been clear to you. The gap is the starting. Some windows close while you are still gathering certainty."
-    ],
-    blindSpot: [
-      "You want the end goal. But when it comes to actually putting in the effort, something always needs to be checked first. One more opinion. One more signal. One more reason to wait.",
-      "You have asked ten people for advice on decisions you already knew the answer to. Not because you needed their input, but because starting felt heavier than researching.",
-      "The pattern is not caution. It is avoidance dressed as wisdom."
-    ]
+    decisionProfile: {
+      pathYouChose: {
+        quote: "Wait until the picture is clearer.",
+        body: "You want to gather all the information before making a move. While this seems smart, it often leads to missed chances."
+      },
+      whatYouActuallyMissed: {
+        quote: "You're careful, but you're also stuck.",
+        paragraphs: [
+          "You might ask a dozen friends for advice on a decision you already know you need to make, but you keep waiting for the perfect moment. You've probably read countless self-help books or attended workshops but still find yourself procrastinating.",
+          "You might have watched others take risks and succeed while you stayed on the sidelines, wondering why you're not living your best life. That feeling of being left behind can sting, and you may find yourself questioning why others seem to have it all figured out while you feel stuck.",
+          "Imagine the opportunities you could have seized if you had acted sooner. Reflect on how much further along you could be if you hadn't waited for clarity that never came."
+        ]
+      },
+      finalThoughts: "What if you had the tools to make decisions without second-guessing yourself? With insights from your Zi Wei chart, you can lock down the most efficient path forward, eliminating the need for endless research and validation. The Design Your Destiny Program will give you the clarity to act decisively, turning your goals into reality and helping you live the life you've always wanted."
+    }
   },
   C: {
     chip: "Calculated Risk",
@@ -311,16 +323,21 @@ export const resultInterpretations: Record<Dimension, ResultInterpretation> = {
       "This keeps you from wasting energy on things that do not add up."
     ],
     q1CostLine: "In the first three months, did some of that planning actually stop something from starting?",
-    pathWalked: [
-      "Precision before movement. Logic before commitment. That was your first answer, and it echoed.",
-      "Every time the pressure came, you chose precision. You do not waste resources on things that do not add up.",
-      "But the pattern has a blind spot that always looks like thoroughness. Opportunities were not lost to bad luck. They were reviewed to death."
-    ],
-    blindSpot: [
-      "You over-plan. You over-calculate. You treat every partnership, every opportunity, every risk as a spreadsheet problem. And by the time the numbers look right, the window has closed.",
-      "Perfectionism has cost you more than imperfection ever could. The deals you did not take, the partnerships you analysed to death, the ideas you refined until they were no longer relevant.",
-      "You see every detail. But you have lost the big picture."
-    ]
+    decisionProfile: {
+      pathYouChose: {
+        quote: "Map every risk before committing.",
+        body: "You like to think things through and analyze every detail before taking action. While this is a good habit, it can often lead to missed opportunities."
+      },
+      whatYouActuallyMissed: {
+        quote: "You're careful, but you're also missing out.",
+        paragraphs: [
+          "Your habit of overthinking can keep you from making decisions. You might spend hours calculating the risks and rewards of every opportunity, debating with yourself until the chance passes. For example, you may have hesitated to invest in a promising project because you wanted to make sure everything was perfect, only to see someone else succeed with that very idea.",
+          "Think about how many partnerships you've let slip away because you were too busy analyzing every detail instead of taking action. You might find yourself stuck in a cycle of what ifs, wondering how your life could look different if you had just taken that leap.",
+          "Every decade brings new opportunities, and while you're busy weighing the pros and cons, others are moving ahead. Imagine the regret of looking back and realizing you could have been part of something amazing if you had just acted."
+        ]
+      },
+      finalThoughts: "What if you had a clear playbook for 2026? By understanding your wealth path, career trajectory, and relationship dynamics through your Zi Wei chart, you can make informed decisions more effectively. The Design Your Destiny Program equips you with the knowledge to take bold steps forward, turning potential regrets into successful outcomes."
+    }
   },
   D: {
     chip: "Preserving Options",
@@ -329,16 +346,20 @@ export const resultInterpretations: Record<Dimension, ResultInterpretation> = {
       "This keeps you from being trapped by choices that no longer fit."
     ],
     q1CostLine: "In the first three months, did some of that flexibility actually prevent you from building?",
-    pathWalked: [
-      "Keep the exits open. Stay in the room without fully belonging to it. That was your first instinct, and it stayed.",
-      "Every time the pressure came, you chose flexibility. You read the room faster than most.",
-      "But the pattern is easily pulled. The next opportunity catches your eye before the current one is finished. Nothing gets fully built when everything stays tentative."
-    ],
-    blindSpot: [
-      "You are easily distracted. Easily influenced. When someone else succeeds at something, you suddenly want to do that too. Not because it fits your path, but because it looked good from the outside.",
-      "You want to show the best version of yourself to everyone. But that performance takes energy away from the actual work. The details slip. The depth never comes.",
-      "From the outside, your life looks full. From the inside, you know it is scattered."
-    ]
+    decisionProfile: {
+      pathYouChose: {
+        quote: "Keep my options open as long as possible.",
+        body: "You like to stay flexible and avoid making decisions. This might feel safe, but it often keeps you from moving forward."
+      },
+      whatYouActuallyMissed: {
+        quote: "You're adaptable, but you're also missing out.",
+        paragraphs: [
+          "While you think keeping your options open is smart, it often leads to unfinished projects and lost opportunities. You might recall times when you hesitated to commit to a job, thinking something better would come along, only to watch someone else take that role and thrive.",
+          "Maybe you started several hobbies but never stuck with any, leaving you feeling scattered and unfulfilled. When friends share their successes, you might feel a pang of jealousy, realizing you're still waiting for the right time to start something meaningful. The fear of making the wrong choice can hold you back, leaving you feeling frustrated and stuck in a cycle of indecision."
+        ]
+      },
+      finalThoughts: "What if you could pinpoint the sectors of your life that are primed for growth right now? By tapping into your Zi Wei chart, you can discover your main reward areas and act on them quickly. The Design Your Destiny Program will empower you to make confident decisions, helping you capitalize on opportunities and break free from indecision, allowing you to create the life you truly desire."
+    }
   }
 };
 
