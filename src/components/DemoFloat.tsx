@@ -58,17 +58,11 @@ export const DemoFloat: React.FC = () => {
     setMenuOpen(false);
   }
 
-  /** Closes the overlay and returns to normal game view. */
+  /** Closes the demo overlay and returns to the normal app flow. */
   function closeDemo(): void {
     setActiveDimension(null);
   }
 
-  /** Cycles to the next dimension while the overlay is open. */
-  function cycleNext(): void {
-    if (activeDimension === null) return;
-    const idx = DIMENSIONS.indexOf(activeDimension);
-    setActiveDimension(DIMENSIONS[(idx + 1) % DIMENSIONS.length]);
-  }
 
   return (
     <>
@@ -87,68 +81,6 @@ export const DemoFloat: React.FC = () => {
             overflowY: "auto"
           }}
         >
-          {/* Sticky top bar */}
-          <div
-            style={{
-              position: "sticky",
-              top: 0,
-              zIndex: 1,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
-              padding: "0.75rem 1rem",
-              background: "rgba(252,251,249,0.95)",
-              backdropFilter: "blur(8px)",
-              borderBottom: "1px solid rgba(0,0,0,0.06)"
-            }}
-          >
-            <span
-              style={{
-                fontSize: "0.7rem",
-                fontWeight: 600,
-                letterSpacing: "2px",
-                textTransform: "uppercase",
-                color: "rgba(0,0,0,0.35)"
-              }}
-            >
-              Preview: {DIMENSION_LABELS[activeDimension]}
-            </span>
-
-            <div style={{ display: "flex", gap: "0.5rem" }}>
-              <button
-                onClick={cycleNext}
-                aria-label="Preview next dimension"
-                style={{
-                  fontSize: "0.75rem",
-                  fontWeight: 500,
-                  padding: "0.35rem 0.75rem",
-                  borderRadius: "999px",
-                  border: "1px solid rgba(0,0,0,0.12)",
-                  background: "white",
-                  cursor: "pointer",
-                  color: "var(--color-text)"
-                }}
-              >
-                Next →
-              </button>
-              <button
-                onClick={closeDemo}
-                aria-label="Close demo preview"
-                style={{
-                  fontSize: "0.75rem",
-                  fontWeight: 500,
-                  padding: "0.35rem 0.75rem",
-                  borderRadius: "999px",
-                  border: "1px solid rgba(0,0,0,0.12)",
-                  background: "white",
-                  cursor: "pointer",
-                  color: "var(--color-text)"
-                }}
-              >
-                ✕ Close
-              </button>
-            </div>
-          </div>
 
           <ResultScreen
             name="Alex"

@@ -527,3 +527,95 @@ button:focus-visible {
 }
 
 /* (narrative-quote classes removed; replaced by phase3-echo inline hero text) */
+
+/* ─── Print / Save as PDF ───────────────────────────────────────────────── */
+
+/** Hidden on screen, shown only when printing. */
+.print-only-header {
+  display: none;
+}
+
+/** Shown on screen, hidden when printing. */
+.no-print {
+  display: flex;
+}
+
+@media print {
+  /* Kill the background image and orbs — print on white */
+  #root {
+    background-image: none !important;
+    background-color: #fff !important;
+    max-width: 100% !important;
+    box-shadow: none !important;
+  }
+
+  /* Hide everything that isn't the result content */
+  .no-print,
+  .result-curtain,
+  .ambient-orb-1,
+  .ambient-orb-2 {
+    display: none !important;
+  }
+
+  /* Remove glass container padding and background so it reads as a plain page */
+  .glass-container {
+    padding: 2rem 2.5rem !important;
+    min-height: unset !important;
+  }
+
+  /* Cards print with a light grey border instead of the frosted white */
+  .phase3-card {
+    background: #fff !important;
+    border: 1px solid #e0dbd4 !important;
+    box-shadow: none !important;
+    break-inside: avoid;
+    margin-bottom: 1rem;
+  }
+
+  /* Gradient text doesn't always survive print — fall back to solid colour */
+  .phase3-echo {
+    -webkit-text-fill-color: #b8842a !important;
+  }
+
+  .phase3-warning-title {
+    -webkit-text-fill-color: #a82c14 !important;
+  }
+
+  .phase3-closer {
+    -webkit-text-fill-color: #2c251d !important;
+  }
+
+  /* Show the print-only name/pattern header */
+  .print-only-header {
+    display: block !important;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid #e8b84b;
+  }
+
+  /* Ensure bars render — some browsers strip background on print */
+  .distribution-fill {
+    background: #b0a090 !important;
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+
+  .distribution-fill--dominant {
+    background: #c9922f !important;
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+
+  .distribution-track {
+    background: #ebe7e1 !important;
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+
+  /* Remove all animations — they freeze at frame 0 if not reset */
+  *, *::before, *::after {
+    animation: none !important;
+    transition: none !important;
+    opacity: 1 !important;
+  }
+}

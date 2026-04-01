@@ -6,7 +6,6 @@ import { ReflectionScreen } from "./components/ReflectionScreen";
 import { StageIntroScreen } from "./components/StageIntroScreen";
 import { ConfrontationScreen } from "./components/ConfrontationScreen";
 import { ResultScreen }     from "./components/ResultScreen";
-import { DemoFloat }        from "./components/DemoFloat";
 import { questions, Dimension, stageIBehaviorText, q4DescriptionText } from "./data/content";
 
 function App() {
@@ -83,7 +82,7 @@ function App() {
   ).length;
 
   return (
-    <div style={{ position: "relative", overflow: "hidden", minHeight: "100vh", width: "100%" }}>
+    <div style={{ position: "relative", overflowX: "hidden", minHeight: "100vh", width: "100%" }}>
       {/* Ambient depth elements — two large blurred radial gradient orbs that
           float very slowly behind the glass container, giving the frosted-glass
           effect something visible to blur against. Inline styles here override
@@ -181,8 +180,6 @@ function App() {
 
       </main>
 
-      {/* Dev preview — floating button to inspect all 4 result screen types */}
-      <DemoFloat />
     </div>
   );
 }

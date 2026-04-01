@@ -222,6 +222,19 @@ export const ResultScreen: React.FC<ResultScreenProps> = ({
       {phase === 3 && (
         <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: "1.2rem" }}>
 
+          {/* Print-only header — name + pattern shown at top of exported PDF */}
+          <div className="print-only-header">
+            <p style={{ fontSize: "0.65rem", letterSpacing: "3px", textTransform: "uppercase", color: "#4a3f34", marginBottom: "0.3rem" }}>
+              Predictable Destiny
+            </p>
+            <h1 style={{ fontSize: "2rem", fontWeight: 600, color: "#2c251d", marginBottom: "0.25rem" }}>
+              {name || "Friend"}
+            </h1>
+            <p style={{ fontSize: "0.75rem", fontWeight: 600, letterSpacing: "2px", textTransform: "uppercase", color: "#4a3f34" }}>
+              {resultData.chip}
+            </p>
+          </div>
+
           {/* ─ Card 1: Decision Portrait ─ */}
           <div className="phase3-card animate-fade-up">
             <p className="phase3-overline">Your Decision Portrait</p>
@@ -313,6 +326,7 @@ export const ResultScreen: React.FC<ResultScreenProps> = ({
               {resultData.blindSpot[2]}
             </p>
           </div>
+
 
         </div>
       )}
