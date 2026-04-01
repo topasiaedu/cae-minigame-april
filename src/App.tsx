@@ -6,6 +6,7 @@ import { ReflectionScreen } from "./components/ReflectionScreen";
 import { StageIntroScreen } from "./components/StageIntroScreen";
 import { ConfrontationScreen } from "./components/ConfrontationScreen";
 import { ResultScreen }     from "./components/ResultScreen";
+// import { DemoFloat }        from "./components/DemoFloat";
 import { questions, Dimension, stageIBehaviorText, q4DescriptionText } from "./data/content";
 
 function App() {
@@ -178,6 +179,9 @@ function App() {
         )}
 
       </main>
+
+      {/* Dev preview — floating button to inspect all 4 result screen types */}
+      {/* <DemoFloat /> */}
     </div>
   );
 }

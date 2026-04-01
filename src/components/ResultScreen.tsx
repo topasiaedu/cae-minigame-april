@@ -151,7 +151,7 @@ export const ResultScreen: React.FC<ResultScreenProps> = ({
     <div className={`glass-container ${transClass}`} style={{ paddingBottom: "4rem" }}>
       <div className="result-curtain" />
 
-      {/* Back button */}
+      {/* Top bar: back + (Phase 3) centered stage-style title, same pattern as QuestionScreen */}
       <div className="animate-fade-up" style={{ display: "flex", alignItems: "center", marginBottom: "2rem" }}>
         <button
           onClick={handleBack}
@@ -160,12 +160,34 @@ export const ResultScreen: React.FC<ResultScreenProps> = ({
             border: "none",
             cursor: "pointer",
             padding: "0.5rem",
-            marginLeft: "-0.5rem"
+            marginLeft: "-0.5rem",
+            flexShrink: 0
           }}
           aria-label="Go back"
         >
           <ChevronLeft size={24} color="var(--color-text)" />
         </button>
+        {phase === 3 ? (
+          <>
+            <div style={{ flex: 1, textAlign: "center", minWidth: 0 }}>
+              <div
+                style={{
+                  fontSize: "1rem",
+                  letterSpacing: "2px",
+                  opacity: 0.9,
+                  fontWeight: 600,
+                  color: "var(--color-text)",
+                  textTransform: "uppercase",
+                  lineHeight: 1.35,
+                  padding: "0 0.35rem"
+                }}
+              >
+                YOUR DECISION PROFILE ANALYSIS
+              </div>
+            </div>
+            <div style={{ width: "32px", flexShrink: 0 }} aria-hidden />
+          </>
+        ) : null}
       </div>
 
       {/* ── Phase 1: Recognition — "Here is who you are" ────────────────── */}
