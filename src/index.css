@@ -411,36 +411,25 @@ button:focus-visible {
 }
 
 /* ─── Result Distribution Bar ────────────────────────────────────────────── */
-.distribution-row {
-  display: grid;
-  grid-template-columns: minmax(120px, 1fr) 2fr auto;
-  align-items: center;
-  gap: 0.6rem;
-}
-
-.distribution-label {
-  font-size: 0.9rem;
-  font-weight: 500;
-  color: var(--color-text);
-}
 
 .distribution-track {
-  height: 0.6rem;
-  background: rgba(0, 0, 0, 0.08);
+  height: 8px;
+  background: rgba(0, 0, 0, 0.06);
   border-radius: 999px;
   overflow: hidden;
 }
 
+/** Non-dominant dimension fill — muted. */
 .distribution-fill {
   height: 100%;
-  background: var(--color-gold-mid);
+  background: rgba(0, 0, 0, 0.12);
   border-radius: 999px;
-  transition: width 0.9s cubic-bezier(0.2, 0.8, 0.2, 1);
+  transition: width 1s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
-.distribution-count {
-  font-size: 0.85rem;
-  color: var(--color-text-light);
+/** Dominant dimension fill — gold gradient matching phase3-echo. */
+.distribution-fill--dominant {
+  background: linear-gradient(to right, #e8b84b 0%, #b8842a 100%);
 }
 
 /* ── Phase 3 Card System ─────────────────────────────────────────────── */
@@ -475,15 +464,19 @@ button:focus-visible {
 }
 
 /**
- * Player's own words, displayed inline as hero text. No boxes, no borders.
- * The size and colour difference is enough to separate them from prose.
+ * Player's own words, displayed inline as hero text.
+ * Warm gold gradient left-to-right — richer than a flat gold and catches the eye
+ * without competing with the prose body text around it.
  */
 .phase3-echo {
   font-size: 1.15rem;
   font-weight: 500;
   line-height: 1.55;
-  color: var(--color-gold-dark);
   padding: 0.8rem 0;
+  background: linear-gradient(to right, #e8b84b 0%, #b8842a 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 /** Bold closing line inside the path card. Slightly larger to land as a takeaway. */
@@ -494,24 +487,36 @@ button:focus-visible {
   color: var(--color-text);
 }
 
-/** Blind-spot section heading. Large enough to command, not shout. */
+/**
+ * Blind-spot section heading.
+ * Deep terracotta-to-rust gradient — signals urgency without screaming.
+ */
 .phase3-warning-title {
   font-size: 1.1rem;
   font-weight: 600;
   line-height: 1.4;
-  color: rgba(160, 45, 25, 0.9);
   margin-bottom: 1.2rem;
+  background: linear-gradient(to right, #e05533 0%, #9b2710 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
-/** The emotional closer inside the blind-spot card. Largest text in Phase 3. */
+/**
+ * Emotional closer inside the blind-spot card. Largest text in Phase 3.
+ * Near-black to dark-warm gradient — feels weighty, final, not decorative.
+ */
 .phase3-closer {
   font-size: 1.15rem;
   font-weight: 600;
   line-height: 1.5;
-  color: var(--color-text);
   padding-top: 1rem;
   margin-top: 0.6rem;
   border-top: 1px solid rgba(180, 50, 30, 0.1);
+  background: linear-gradient(to right, #3d2e1e 0%, #1e1610 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 /** Thin horizontal divider inside Phase 3 cards. */

@@ -226,20 +226,38 @@ export const ResultScreen: React.FC<ResultScreenProps> = ({
           <div className="phase3-card animate-fade-up">
             <p className="phase3-overline">Your Decision Portrait</p>
 
-            <div style={{ display: "flex", flexDirection: "column", gap: "0.6rem" }}>
+            <div style={{ display: "flex", flexDirection: "column", gap: "1.6rem" }}>
               {distributionOrder.map((dimension) => {
                 const widthPercent = Math.round(
                   (answerCounts[dimension] / maxDistributionCount) * 100
                 );
+                const isDominant = dimension === finalDimension;
                 return (
-                  <div key={dimension} className="distribution-row">
-                    <span className="distribution-label">
-                      {resultInterpretations[dimension].chip}
-                    </span>
-                    <div className="distribution-track">
-                      <div className="distribution-fill" style={{ width: `${widthPercent}%` }} />
+                  <div key={dimension}>
+                    {/* Label row: name left, count right */}
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: "0.6rem" }}>
+                      <span style={{
+                        fontSize: isDominant ? "0.93rem" : "0.85rem",
+                        fontWeight: isDominant ? 600 : 400,
+                        color: isDominant ? "var(--color-text)" : "var(--color-text-light)"
+                      }}>
+                        {resultInterpretations[dimension].chip}
+                      </span>
+                      <span style={{
+                        fontSize: isDominant ? "0.9rem" : "0.8rem",
+                        fontWeight: isDominant ? 600 : 400,
+                        color: isDominant ? "var(--color-text)" : "var(--color-text-light)"
+                      }}>
+                        {answerCounts[dimension]}
+                      </span>
                     </div>
-                    <span className="distribution-count">({answerCounts[dimension]})</span>
+                    {/* Bar */}
+                    <div className="distribution-track">
+                      <div
+                        className={isDominant ? "distribution-fill distribution-fill--dominant" : "distribution-fill"}
+                        style={{ width: `${widthPercent}%` }}
+                      />
+                    </div>
                   </div>
                 );
               })}
