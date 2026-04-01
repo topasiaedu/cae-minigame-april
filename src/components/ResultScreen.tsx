@@ -69,6 +69,83 @@ export const ResultScreen: React.FC<ResultScreenProps> = ({
 
   const hasQ10 = q10AnswerText.trim().length > 0;
   const hasCost = playerCostText.trim().length > 0;
+  const emphasisTermsByDimension: Record<Dimension, string[]> = {
+    A: [
+      "FOMO (Fear of Missing Out)",
+      "relationships",
+      "burnout",
+      "regret",
+      "costly mistakes",
+      "hustle smartly",
+      "Design Your Destiny Program"
+    ],
+    B: [
+      "stuck",
+      "procrastinating",
+      "left behind",
+      "clarity",
+      "act decisively",
+      "goals into reality",
+      "Design Your Destiny Program"
+    ],
+    C: [
+      "missed opportunities",
+      "overthinking",
+      "chance passes",
+      "hesitated",
+      "what ifs",
+      "regret",
+      "bold steps forward",
+      "Design Your Destiny Program"
+    ],
+    D: [
+      "unfinished projects",
+      "lost opportunities",
+      "indecision",
+      "frustrated",
+      "confident decisions",
+      "capitalize on opportunities",
+      "Design Your Destiny Program"
+    ]
+  };
+  const emphasisTerms = emphasisTermsByDimension[finalDimension];
+
+  const renderHighlightedText = (text: string): React.ReactNode[] => {
+    const escapedTerms = emphasisTerms
+      .sort((a, b) => b.length - a.length)
+      .map((term) => term.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"));
+    const pattern = new RegExp(`(${escapedTerms.join("|")})`, "gi");
+    const parts = text.split(pattern);
+    return parts.map((part, index) => {
+      const isMatch = emphasisTerms.some((term) => term.toLowerCase() === part.toLowerCase());
+      if (!isMatch) return <React.Fragment key={index}>{part}</React.Fragment>;
+      return <span key={index} className="phase3-key">{part}</span>;
+    });
+  };
+
+  const renderWithLeadSentence = (text: string, className: string): React.ReactNode => {
+    const firstSentenceEnd = text.indexOf(". ");
+    if (firstSentenceEnd === -1) {
+      return <p className={className}>{renderHighlightedText(text)}</p>;
+    }
+    const lead = text.slice(0, firstSentenceEnd + 1);
+    const rest = text.slice(firstSentenceEnd + 2);
+    return (
+      <p className={className}>
+        <span className="phase3-leadline">{renderHighlightedText(lead)}</span>{" "}
+        {renderHighlightedText(rest)}
+      </p>
+    );
+  };
+
+  /** Extract first sentence preserving punctuation, regardless of ., ?, or ! */
+  const splitFirstSentence = (text: string): { first: string; rest: string } => {
+    const match = text.match(/^(.*?[.!?]["”']?)(\s+|$)([\s\S]*)$/);
+    if (match === null) {
+      return { first: text, rest: "" };
+    }
+    return { first: match[1].trim(), rest: match[3].trim() };
+  };
 
   return (
     <div className={`glass-container ${transClass}`} style={{ paddingBottom: "4rem" }}>
@@ -218,7 +295,7 @@ export const ResultScreen: React.FC<ResultScreenProps> = ({
 
       {/* ── Phase 3: Portrait + Urgency ───────────────────────────────────── */}
       {phase === 3 && (
-        <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: "1.5rem" }}>
+        <div className="phase3-result" style={{ flex: 1, display: "flex", flexDirection: "column", gap: "1.5rem" }}>
 
           {/* Print-only header — name + pattern shown at top of exported PDF */}
           <div className="print-only-header">
@@ -288,9 +365,7 @@ export const ResultScreen: React.FC<ResultScreenProps> = ({
               &ldquo;{resultData.decisionProfile.pathYouChose.quote}&rdquo;
             </p>
 
-            <p className="phase3-body">
-              {resultData.decisionProfile.pathYouChose.body}
-            </p>
+            {renderWithLeadSentence(resultData.decisionProfile.pathYouChose.body, "phase3-body")}
           </div>
 
           {/* ─ Card 3: What You Actually Missed ─ */}
@@ -306,7 +381,12 @@ export const ResultScreen: React.FC<ResultScreenProps> = ({
             {resultData.decisionProfile.whatYouActuallyMissed.paragraphs.map((paragraph, index) => (
               <React.Fragment key={index}>
                 {index > 0 && <div className="phase3-divider" />}
-                <p className="phase3-body">{paragraph}</p>
+                {renderWithLeadSentence(
+                  paragraph,
+                  index === 1
+                    ? "phase3-body phase3-body--indented"
+                    : "phase3-body"
+                )}
               </React.Fragment>
             ))}
           </div>
@@ -317,8 +397,11 @@ export const ResultScreen: React.FC<ResultScreenProps> = ({
               <span className="phase3-step">04</span>
               <p className="phase3-overline">Final Thoughts</p>
             </div>
+            <p className="phase3-final-lead">
+              {splitFirstSentence(resultData.decisionProfile.finalThoughts).first}
+            </p>
             <p className="phase3-body phase3-body-final">
-              {resultData.decisionProfile.finalThoughts}
+              {renderHighlightedText(splitFirstSentence(resultData.decisionProfile.finalThoughts).rest)}
             </p>
           </div>
 

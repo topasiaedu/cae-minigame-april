@@ -5,28 +5,24 @@ import { ResultScreen } from "./ResultScreen";
 /** Mock answer texts keyed by dimension, used to populate the demo ResultScreen. */
 const DEMO_DATA: Record<
   Dimension,
-  { q1AnswerText: string; playerCostText: string; q10AnswerText: string; answerCounts: Record<Dimension, number> }
+  { playerCostText: string; q10AnswerText: string; answerCounts: Record<Dimension, number> }
 > = {
   A: {
-    q1AnswerText: "Run the numbers before I decide",
     playerCostText: "Relationships I moved too fast through",
     q10AnswerText: "moving early was the right call",
     answerCounts: { A: 5, B: 1, C: 1, D: 0 }
   },
   B: {
-    q1AnswerText: "Wait until the picture was clearer",
     playerCostText: "Opportunities I waited too long on",
     q10AnswerText: "holding back was still right",
     answerCounts: { A: 1, B: 5, C: 1, D: 0 }
   },
   C: {
-    q1AnswerText: "Map every risk before committing",
     playerCostText: "Time spent overanalysing what never launched",
     q10AnswerText: "you wanted to understand the logic",
     answerCounts: { A: 0, B: 1, C: 5, D: 1 }
   },
   D: {
-    q1AnswerText: "Keep my options open as long as possible",
     playerCostText: "Projects I never fully committed to",
     q10AnswerText: "the timing was just different",
     answerCounts: { A: 1, B: 0, C: 1, D: 5 }
@@ -89,7 +85,6 @@ export const DemoFloat: React.FC = () => {
             tiedDimensions={[]}
             answerCounts={DEMO_DATA[activeDimension].answerCounts}
             q10AnswerText={DEMO_DATA[activeDimension].q10AnswerText}
-            q1AnswerText={DEMO_DATA[activeDimension].q1AnswerText}
             isTransitioning={false}
             onBack={closeDemo}
             playerCostText={DEMO_DATA[activeDimension].playerCostText}

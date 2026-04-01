@@ -133,7 +133,7 @@ export const QuestionScreen: React.FC<QuestionScreenProps> = ({
       }
     }
     return { type: "simple", text: DIMENSION_ECHOES[selected] };
-  }, [selected, questionIndex, answers]);
+  }, [selected, questionIndex, answers, question.isCostQuestion]);
 
   /**
    * Q7 (questionIndex 6) gets an extra layer of darkness on entry.

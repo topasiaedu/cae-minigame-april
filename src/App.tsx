@@ -178,7 +178,6 @@ function App() {
         )}
 
       </main>
-
     </div>
   );
 }

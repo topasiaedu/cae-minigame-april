@@ -505,6 +505,21 @@ button:focus-visible {
   max-width: 38ch;
 }
 
+.phase3-body--indented {
+  border-left: 2px solid rgba(125, 31, 15, 0.18);
+  padding-left: 0.8rem;
+}
+
+.phase3-leadline {
+  font-weight: 600;
+  color: #2c251d;
+}
+
+.phase3-key {
+  color: #7d1f0f;
+  font-weight: 600;
+}
+
 /**
  * Player's own words, displayed inline as hero text.
  * Warm gold gradient left-to-right — richer than a flat gold and catches the eye
@@ -515,10 +530,16 @@ button:focus-visible {
   font-weight: 600;
   line-height: 1.55;
   padding: 0.8rem 0;
-  background: linear-gradient(to right, #9a6a1f 0%, #e5b446 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: #9a6a1f;
+}
+
+@supports (-webkit-background-clip: text) {
+  .phase3-echo {
+    background: linear-gradient(to right, #9a6a1f 0%, #e5b446 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
 }
 
 /** Bold closing line inside the path card. Slightly larger to land as a takeaway. */
@@ -559,6 +580,24 @@ button:focus-visible {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+}
+
+.phase3-final-lead {
+  font-size: 1.15rem;
+  font-weight: 600;
+  line-height: 1.5;
+  margin-top: 0.1rem;
+  margin-bottom: 0.4rem;
+  color: #9a6a1f;
+}
+
+@supports (-webkit-background-clip: text) {
+  .phase3-final-lead {
+    background: linear-gradient(to right, #9a6a1f 0%, #e5b446 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
 }
 
 /** Thin horizontal divider inside Phase 3 cards. */
